@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CompTIA A+ 220-1101 Core 1 Study Hub</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { background: #0c0c0c; color: #d4d4d4; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace; font-size: 14px; }
+  button { font-family: inherit; }
+  textarea { font-family: inherit; }
+  #root { min-height: 100vh; }
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+/* CompTIA A+ 220-1101 Core 1 -- Study Hub
+   Persistent scoring, timed exams, domain drills, progress dashboard */
+
+const QUESTIONS = [
+// -- DOMAIN 1: Mobile Devices (15%) --
+{ id:1, d:1, obj:"1.1", q:"A technician needs to replace a laptop's wireless card. Which form factor is MOST commonly used in modern laptops?",
+o:["Mini-PCI","M.2","mSATA","ExpressCard"], c:1,
+ex:"M.2 (Key A/E slot) is the current standard for laptop wireless. Mini-PCI and ExpressCard are legacy. mSATA is for storage." },
+{ id:2, d:1, obj:"1.1", q:"A laptop user reports the screen is very dim but can see a faint image with a flashlight. Which component is MOST likely faulty?",
+o:["LCD panel","GPU","Backlight / inverter","Video cable"], c:2,
+ex:"If you can see an image with a flashlight, the panel works. The backlight (or inverter on older CCFL screens) is failing. Modern laptops use LED backlights." },
+{ id:3, d:1, obj:"1.2", q:"Which display technology provides the widest viewing angles and best color reproduction?",
+o:["TN (Twisted Nematic)","VA (Vertical Alignment)","IPS (In-Plane Switching)","OLED"], c:3,
+ex:"OLED has per-pixel lighting with perfect blacks and infinite contrast. IPS is 2nd best for angles. TN has the worst viewing angles but fastest response." },
+{ id:4, d:1, obj:"1.3", q:"A user wants to connect a stylus and wireless keyboard to a tablet. Which technology uses tap-to-pair for the initial connection?",
+o:["Wi-Fi Direct","NFC tap-to-pair with Bluetooth","Miracast","AirDrop"], c:1,
+ex:"NFC tap-to-pair lets you touch two NFC devices together to automatically establish a Bluetooth connection without manual PIN entry." },
+{ id:5, d:1, obj:"1.4", q:"A smartphone shows 'No SIM card detected.' What should the tech try FIRST?",
+o:["Factory reset","Replace the antenna","Remove and reseat the SIM","Update firmware"], c:2,
+ex:"Always start simple -- reseat the SIM card. It may just be slightly dislodged. Factory reset is a last resort." },
+{ id:6, d:1, obj:"1.4", q:"Which cellular technology was historically used by Verizon and did NOT require SIM cards in older implementations?",
+o:["GSM","CDMA","LTE","HSPA+"], c:1,
+ex:"CDMA (Verizon, Sprint) programmed phones directly -- no SIM. GSM carriers (AT&T, T-Mobile) always used SIM cards. LTE and 5G use SIM/eSIM." },
+{ id:7, d:1, obj:"1.4", q:"An IT department needs to remotely disable cameras on company phones and enforce password policies. What solution is needed?",
+o:["VPN client","Antivirus","MDM (Mobile Device Management)","Full-disk encryption"], c:2,
+ex:"MDM lets IT enforce policies, push apps, disable features, and remotely wipe devices. VPN secures network traffic but can't enforce device policies." },
+{ id:8, d:1, obj:"1.1", q:"A laptop user wants to connect an external 4K display at 60Hz. Which port provides the BEST support?",
+o:["VGA","DVI-D","HDMI 1.4","Thunderbolt 3 / USB-C"], c:3,
+ex:"Thunderbolt 3/USB-C supports 4K@60Hz and even dual 4K. HDMI 1.4 only does 4K@30Hz. DVI-D maxes at 2560x1600. VGA is analog, no 4K." },
+
+// -- DOMAIN 2: Networking (20%) --
+{ id:9, d:2, obj:"2.1", q:"Which port is used for SECURE file transfer?",
+o:["21 -- FTP","22 -- SFTP/SSH","23 -- Telnet","69 -- TFTP"], c:1,
+ex:"Port 22 (SSH/SFTP) encrypts all traffic. FTP (21), Telnet (23), and TFTP (69) all transmit in plaintext -- including credentials." },
+{ id:10, d:2, obj:"2.1", q:"What port does HTTPS use by default?",
+o:["80","443","8080","8443"], c:1,
+ex:"HTTPS = port 443. HTTP = port 80. 8080/8443 are common alternatives but not defaults." },
+{ id:11, d:2, obj:"2.1", q:"Which protocol uses UDP port 67 (server) and UDP port 68 (client)?",
+o:["DNS","DHCP","SNMP","TFTP"], c:1,
+ex:"DHCP: server on UDP 67, client on UDP 68. DNS = 53, SNMP = 161, TFTP = 69." },
+{ id:12, d:2, obj:"2.1", q:"What port does RDP (Remote Desktop Protocol) use?",
+o:["443","3389","5900","445"], c:1,
+ex:"RDP = 3389. VNC = 5900. SMB = 445. HTTPS = 443." },
+{ id:13, d:2, obj:"2.1", q:"Which port does DNS use?",
+o:["25","53","67","110"], c:1,
+ex:"DNS = port 53 (TCP and UDP). UDP for standard queries, TCP for zone transfers. SMTP=25, DHCP=67, POP3=110." },
+{ id:14, d:2, obj:"2.1", q:"A tech needs to securely receive email and securely send email. Which port combination works?",
+o:["POP3 (110) + SMTP (25)","IMAP (143) + SMTP (25)","IMAPS (993) + SMTPS (587)","POP3S (995) + SMTPS (465)"], c:3,
+ex:"POP3S=995 and SMTPS=465 are both encrypted. IMAPS (993) + SMTP w/ STARTTLS (587) also works. Ports 110, 143, 25 are unencrypted." },
+{ id:15, d:2, obj:"2.2", q:"Which network device operates at OSI Layer 3 and forwards traffic based on IP addresses?",
+o:["Hub","Switch","Router","Access point"], c:2,
+ex:"Routers = Layer 3 (Network), use IP addresses. Switches = Layer 2 (Data Link), use MAC addresses. Hubs = Layer 1 (Physical). APs = Layer 2." },
+{ id:16, d:2, obj:"2.2", q:"What does a PoE switch provide?",
+o:["Faster network speeds","Power and data over one Ethernet cable","Fiber-to-copper conversion","Extended Wi-Fi range"], c:1,
+ex:"PoE delivers electrical power + data through a single Ethernet cable. Used for IP cameras, VoIP phones, and wireless APs -- no separate power cable needed." },
+{ id:17, d:2, obj:"2.3", q:"Which Wi-Fi standard operates ONLY on the 5 GHz band?",
+o:["802.11n (Wi-Fi 4)","802.11ac (Wi-Fi 5)","802.11ax (Wi-Fi 6)","802.11g"], c:1,
+ex:"802.11ac (Wi-Fi 5) = 5 GHz only. 802.11n = 2.4+5 GHz. Wi-Fi 6 = 2.4+5 GHz (6E adds 6 GHz). 802.11g = 2.4 only." },
+{ id:18, d:2, obj:"2.4", q:"Which server translates domain names to IP addresses?",
+o:["DHCP","DNS","Proxy","AAA"], c:1,
+ex:"DNS resolves names to IPs. DHCP assigns IPs. Proxy is an intermediary. AAA handles authentication/authorization/accounting." },
+{ id:19, d:2, obj:"2.4", q:"Which DNS record maps a hostname to an IPv6 address?",
+o:["A","AAAA","MX","CNAME"], c:1,
+ex:"AAAA -> IPv6. A -> IPv4. MX -> mail server. CNAME -> alias pointing one hostname to another." },
+{ id:20, d:2, obj:"2.5", q:"A tech wants to see the path packets take to a destination. Which command?",
+o:["ping","tracert / traceroute","nslookup","netstat"], c:1,
+ex:"tracert (Win) / traceroute (Linux/Mac) shows each hop. Ping tests connectivity. Nslookup queries DNS. Netstat shows active connections." },
+{ id:21, d:2, obj:"2.5", q:"Which tool verifies pin-to-pin connectivity on a newly run Ethernet cable?",
+o:["Toner probe","Cable tester","Wi-Fi analyzer","Loopback plug"], c:1,
+ex:"Cable tester checks wiring/connectivity. Toner probe traces cables through walls. Wi-Fi analyzer measures wireless. Loopback plug tests port send/receive." },
+{ id:22, d:2, obj:"2.6", q:"Devices on a network are getting 169.254.x.x addresses. What does this indicate?",
+o:["IPv6 is active","DHCP server is unreachable","Static IP conflict","DNS is down"], c:1,
+ex:"169.254.x.x = APIPA (Automatic Private IP Addressing). Assigned when a client can't reach the DHCP server." },
+{ id:23, d:2, obj:"2.6", q:"Which IP range is the Class C private address space?",
+o:["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","169.254.0.0/16"], c:2,
+ex:"192.168.0.0/16 = Class C private. 10.0.0.0/8 = Class A. 172.16.0.0/12 = Class B. 169.254.0.0/16 = APIPA (link-local)." },
+{ id:24, d:2, obj:"2.6", q:"What does a subnet mask determine?",
+o:["Encryption level","Network vs. host portion of an IP address","Automatic IP assignment","Domain name resolution"], c:1,
+ex:"Subnet mask separates network bits from host bits. Example: 255.255.255.0 (/24) means first 3 octets = network, last = hosts." },
+{ id:25, d:2, obj:"2.7", q:"Which internet connection type provides the FASTEST residential speeds?",
+o:["DSL","Cable","Fiber optic","Satellite"], c:2,
+ex:"Fiber commonly offers symmetrical 1+ Gbps. Cable maxes ~1 Gbps down but much less up. DSL is slower. Satellite has high latency." },
+{ id:26, d:2, obj:"2.5", q:"A user can ping an IP address but can't browse websites by name. What's the issue?",
+o:["Gateway is down","DNS resolution is failing","NIC is disabled","Firewall is blocking all traffic"], c:1,
+ex:"Ping by IP works = network is fine. Can't resolve names = DNS issue. Check DNS settings, try 8.8.8.8, or flush DNS cache." },
+
+// -- DOMAIN 3: Hardware (25%) --
+{ id:27, d:3, obj:"3.1", q:"How many pins does a DDR4 desktop DIMM have?",
+o:["184","240","260","288"], c:3,
+ex:"DDR4 DIMM = 288 pins. DDR3 = 240. DDR4 SODIMM (laptop) = 260. DDR3 SODIMM = 204." },
+{ id:28, d:3, obj:"3.1", q:"A motherboard has 4 DIMM slots in alternating colors (blue, black, blue, black). For dual-channel, where do two identical modules go?",
+o:["Slots 1+2 (blue+black)","Slots 1+3 (both blue)","Slots 2+4 (both black)","Any two adjacent slots"], c:1,
+ex:"Matching colors = same channel. Install identical modules in same-color slots for dual-channel. Always check the mobo manual." },
+{ id:29, d:3, obj:"3.1", q:"Which RAM type can detect AND correct single-bit memory errors?",
+o:["DDR5","SODIMM","ECC (Error-Correcting Code)","Buffered RAM"], c:2,
+ex:"ECC detects and corrects single-bit errors -- critical for servers. DDR5 is a generation, SODIMM is a form factor, buffered adds stability but not error correction." },
+{ id:30, d:3, obj:"3.2", q:"Which storage interface provides the FASTEST transfer speeds?",
+o:["SATA III (6 Gbps)","NVMe M.2 (PCIe 3.0 x4)","USB 3.0","eSATA"], c:1,
+ex:"NVMe via PCIe 3.0 x4 = ~32 Gbps (~3,500 MB/s). SATA III = 6 Gbps (~550 MB/s). USB 3.0 = 5 Gbps. NVMe completely bypasses the SATA bottleneck." },
+{ id:31, d:3, obj:"3.2", q:"Which RAID level uses striping WITH distributed parity, requiring minimum 3 drives?",
+o:["RAID 0","RAID 1","RAID 5","RAID 10"], c:2,
+ex:"RAID 5 = striping + distributed parity, min 3 drives, survives 1 failure. RAID 0 = stripe only (no redundancy). RAID 1 = mirror (2 drives). RAID 10 = min 4." },
+{ id:32, d:3, obj:"3.2", q:"What connector attaches a SATA drive's data cable to the motherboard?",
+o:["7-pin SATA data","40-pin ribbon (IDE)","68-pin SCSI","USB Type-C"], c:0,
+ex:"SATA data = thin 7-pin cable. 40-pin ribbon = IDE/PATA (legacy). 68-pin = SCSI. SATA also needs a 15-pin power connector from the PSU." },
+{ id:33, d:3, obj:"3.2", q:"What is the main advantage of NVMe over SATA SSDs?",
+o:["Larger capacity","Lower cost per GB","Significantly faster speeds","Better old-system compatibility"], c:2,
+ex:"NVMe connects via PCIe, achieving 3,500+ MB/s vs SATA's ~550 MB/s. It's more expensive per GB and needs newer hardware, but the speed gap is massive." },
+{ id:34, d:3, obj:"3.3", q:"Which motherboard form factor is the LARGEST standard size?",
+o:["Mini-ITX","Micro-ATX","ATX","E-ATX (Extended ATX)"], c:3,
+ex:"E-ATX = 12x13 in. ATX = 12x9.6 in. Micro-ATX = 9.6x9.6 in. Mini-ITX = 6.7x6.7 in." },
+{ id:35, d:3, obj:"3.3", q:"Modern graphics cards use which expansion slot?",
+o:["PCI","PCIe x1","PCIe x16","AGP"], c:2,
+ex:"GPUs use PCIe x16 for maximum bandwidth. PCI and AGP are legacy. PCIe x1 is physically too small and too slow for graphics." },
+{ id:36, d:3, obj:"3.3", q:"Which CPU socket is used by AMD Ryzen 7000 series?",
+o:["AM4","AM5 (LGA 1718)","LGA 1700","LGA 1200"], c:1,
+ex:"Ryzen 7000 = AM5 (LGA 1718), AMD's first LGA socket. AM4 = Ryzen 1000-5000. LGA 1700 and 1200 are Intel." },
+{ id:37, d:3, obj:"3.4", q:"What is the main ATX motherboard power connector pin count?",
+o:["20-pin","24-pin","4-pin","8-pin"], c:1,
+ex:"Modern ATX = 24-pin main power. Older boards used 20-pin. Many PSUs have 20+4 for compatibility. 4/8-pin connectors are for CPU (EPS12V)." },
+{ id:38, d:3, obj:"3.4", q:"A GPU requires two 8-pin PCIe power connectors but the PSU only has one. What should the tech recommend?",
+o:["Molex-to-PCIe adapter","SATA-to-PCIe adapter","Replace PSU with one that has enough connectors","Daisy-chain from the single connector"], c:2,
+ex:"Replace the PSU. Adapters for GPU power are fire hazards. A proper PSU with dedicated PCIe connectors ensures safe, stable power delivery." },
+{ id:39, d:3, obj:"3.4", q:"A gaming PC draws 650W total with a new GPU. The current PSU is 650W. What's the recommendation?",
+o:["Current PSU is fine","Upgrade to 850W+ PSU","Add a second PSU","Undervolt the GPU"], c:1,
+ex:"Zero headroom is dangerous -- GPUs have transient power spikes. PSUs run most efficiently at 50-80% load. 850W gives ~77% load with room for spikes." },
+{ id:40, d:3, obj:"3.5", q:"A laser printer produces faded prints. Which component MOST likely needs replacement?",
+o:["Fuser assembly","Toner cartridge","Transfer roller","Pickup roller"], c:1,
+ex:"Faded prints = low/empty toner. Fuser issues cause smearing. Transfer roller issues affect toner-to-paper transfer. Pickup rollers cause paper feed jams." },
+{ id:41, d:3, obj:"3.5", q:"What is the correct order of the laser printing process?",
+o:["Processing > Charging > Exposing > Developing > Transferring > Fusing > Cleaning",
+"Charging > Processing > Developing > Exposing > Transferring > Cleaning > Fusing",
+"Processing > Exposing > Charging > Transferring > Developing > Fusing > Cleaning",
+"Charging > Exposing > Processing > Developing > Transferring > Fusing > Cleaning"], c:0,
+ex:"The 7 steps: Processing (data to printer) > Charging (uniform -charge on drum) > Exposing (laser writes image) > Developing (toner sticks) > Transferring (toner to paper) > Fusing (heat bonds) > Cleaning (drum wiped)." },
+
+// -- DOMAIN 4: Virtualization & Cloud (11%) --
+{ id:42, d:4, obj:"4.1", q:"A company wants cloud-hosted email and office apps without managing any infrastructure. Which model?",
+o:["IaaS","PaaS","SaaS","DaaS"], c:2,
+ex:"SaaS = ready-to-use apps (Microsoft 365, Gmail). Provider manages everything. IaaS = virtual machines. PaaS = development platform. DaaS = virtual desktops." },
+{ id:43, d:4, obj:"4.1", q:"Which cloud deployment is owned/operated exclusively by one organization?",
+o:["Public","Private","Hybrid","Community"], c:1,
+ex:"Private cloud = single org, more control/security. Public = shared (AWS, Azure). Hybrid = public+private. Community = shared by orgs with common needs." },
+{ id:44, d:4, obj:"4.1", q:"Which cloud characteristic allows resources to scale dynamically based on demand?",
+o:["Measured service","Rapid elasticity","Resource pooling","Broad network access"], c:1,
+ex:"Rapid elasticity = auto-scale up/down. Measured service = pay for what you use. Resource pooling = shared physical resources. Broad access = available over network." },
+{ id:45, d:4, obj:"4.2", q:"A developer needs to test across multiple OSes from one workstation. What should they use?",
+o:["Remote desktop","Cloud computing","Type 2 hypervisor","VPN"], c:2,
+ex:"Type 2 hypervisor (VirtualBox, VMware Workstation) runs on an existing OS and hosts multiple VMs. Type 1 runs bare-metal on servers." },
+{ id:46, d:4, obj:"4.2", q:"What CPU feature is required for running virtual machines efficiently?",
+o:["Dedicated GPU","Hardware virtualization (VT-x / AMD-V)","ECC memory","10GbE NIC"], c:1,
+ex:"Intel VT-x or AMD-V enables hardware-assisted virtualization. Must be enabled in BIOS/UEFI. More RAM/cores help, but this is the fundamental requirement." },
+{ id:47, d:4, obj:"4.2", q:"What is a VM 'snapshot'?",
+o:["Backup of the host OS","Saved state of a VM at a point in time","Screenshot of the VM desktop","Copy of the virtual disk only"], c:1,
+ex:"A snapshot captures the entire VM state (memory, disk, settings) at a moment. You can revert if something breaks. Not a full backup, but a quick rollback point." },
+
+// -- DOMAIN 5: Hardware & Network Troubleshooting (29%) --
+{ id:48, d:5, obj:"5.1", q:"According to CompTIA's troubleshooting methodology, what is the FIRST step?",
+o:["Establish a theory","Identify the problem","Test the theory","Establish a plan of action"], c:1,
+ex:"CompTIA order: 1) Identify problem > 2) Theory > 3) Test theory > 4) Plan > 5) Implement > 6) Verify > 7) Document." },
+{ id:49, d:5, obj:"5.1", q:"After implementing a fix, what's the NEXT step per CompTIA methodology?",
+o:["Document findings","Verify full system functionality","Establish a new theory","Ask the user about other issues"], c:1,
+ex:"After implementing: Verify functionality (and implement preventive measures). Documentation is the FINAL step." },
+{ id:50, d:5, obj:"5.2", q:"A PC powers on briefly then immediately shuts off. MOST likely cause?",
+o:["Faulty RAM","CPU overheating (bad thermal paste/cooler)","Bad hard drive","Outdated BIOS"], c:1,
+ex:"Instant shutdown = CPU thermal protection. The heatsink may not be seated or thermal paste is missing. CPU hits thermal limit almost immediately." },
+{ id:51, d:5, obj:"5.2", q:"A system gives continuous short beeps during POST. What does this indicate?",
+o:["CPU failure","RAM problem","Video card failure","PSU issue"], c:1,
+ex:"Continuous short beeps = RAM issue (varies by BIOS manufacturer). One long + short beeps usually = video. Single short beep = normal POST." },
+{ id:52, d:5, obj:"5.2", q:"PC powers on, fans spin, but no display and no beep codes. What to try FIRST?",
+o:["Replace CPU","Reseat RAM and video card","Flash BIOS","Replace motherboard"], c:1,
+ex:"No display + no beeps but power = likely unseated component. Reseat RAM and GPU first -- quickest and safest fix." },
+{ id:53, d:5, obj:"5.3", q:"A user reports clicking sounds from their desktop. Which component is failing?",
+o:["SSD","HDD","Optical drive","PSU fan"], c:1,
+ex:"Clicking ('click of death') = failing HDD. The read/write heads are repeatedly failing to calibrate. SSDs have no moving parts. BACK UP IMMEDIATELY." },
+{ id:54, d:5, obj:"5.4", q:"Monitor shows everything with a blue tint. What to check FIRST?",
+o:["Replace monitor","Check video cable for bent pins","Update GPU driver","Replace GPU"], c:1,
+ex:"Color tint = usually a damaged/loose cable, especially VGA/DVI with bent pins losing a color channel. Always check physical connections first." },
+{ id:55, d:5, obj:"5.5", q:"A smartphone's battery drains quickly even when idle. What to check FIRST?",
+o:["Replace battery","Check background apps","Factory reset","Update OS"], c:1,
+ex:"Background apps (GPS, sync, push notifications) are the #1 cause. Check battery usage settings to find power-hungry apps before replacing hardware." },
+{ id:56, d:5, obj:"5.6", q:"Inkjet printer produces streaked output with missing lines. What to do FIRST?",
+o:["Replace ink cartridges","Run head cleaning utility","Replace print head","Clean paper path"], c:1,
+ex:"Streaks/missing lines = clogged nozzles. Run the built-in cleaning utility first. Replace cartridges or print head only if cleaning doesn't work." },
+{ id:57, d:5, obj:"5.7", q:"One department can't access the network but others are fine. Check FIRST?",
+o:["Main router","Department's switch","Firewall","DNS server"], c:1,
+ex:"Localized outage = check the switch serving that department. If router/firewall/DNS were down, ALL departments would be affected." },
+{ id:58, d:5, obj:"5.2", q:"A burning smell comes from inside a desktop PC. What should the tech do FIRST?",
+o:["Open the case to investigate","Power off and unplug immediately","Run hardware diagnostics","Check event logs"], c:1,
+ex:"Safety first! Power off and unplug immediately. A burning smell could mean a failing capacitor, PSU, or shorted component. Never leave it running." },
+{ id:59, d:5, obj:"5.3", q:"A RAID 5 array with 3 drives shows one drive as 'degraded.' What happens if another drive fails before rebuilding?",
+o:["Nothing, RAID 5 can lose 2 drives","Complete data loss","Automatic rebuild on remaining drive","Array switches to RAID 0"], c:1,
+ex:"RAID 5 can only survive ONE drive failure. If a second drive fails before the rebuild completes, all data is lost. This is why RAID 6 (2-drive tolerance) exists." },
+{ id:60, d:5, obj:"5.7", q:"A user gets 'Destination host unreachable' when pinging the default gateway. What's the MOST likely issue?",
+o:["DNS misconfiguration","Physical layer problem (cable/NIC)","Incorrect subnet mask on remote server","Firewall blocking ICMP"], c:1,
+ex:"'Destination host unreachable' to the gateway usually means a Layer 1/2 problem -- bad cable, disconnected port, or disabled NIC. If it were DNS, ping by IP would still work. The gateway is local, so it's likely physical." },
+];
+
+const DOMAINS = [
+{ id:1, name:"Mobile Devices", w:"15%", color:"#a78bfa", icon:"\u{1F4F1}", accent:"#7c3aed" },
+{ id:2, name:"Networking", w:"20%", color:"#60a5fa", icon:"\u{1F310}", accent:"#2563eb" },
+{ id:3, name:"Hardware", w:"25%", color:"#34d399", icon:"\u{1F527}", accent:"#059669" },
+{ id:4, name:"Virtualization & Cloud", w:"11%", color:"#fbbf24", icon:"\u{2601}\u{FE0F}", accent:"#d97706" },
+{ id:5, name:"Troubleshooting", w:"29%", color:"#f87171", icon:"\u{1F50D}", accent:"#dc2626" },
+];
+
+const DOMAIN_NAMES = { 1:"Mobile Devices", 2:"Networking", 3:"Hardware", 4:"Virtualization & Cloud", 5:"Troubleshooting" };
+
+function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+function fmt(s) { const m=Math.floor(s/60),sec=s%60; return m+":"+String(sec).padStart(2,"0"); }
+
+const FRESH = { total:0, correct:0, guessed:0, ds:{1:{a:0,c:0,g:0},2:{a:0,c:0,g:0},3:{a:0,c:0,g:0},4:{a:0,c:0,g:0},5:{a:0,c:0,g:0}}, exams:[], sessions:[] };
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem("comptia-a-progress");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.guessed === undefined) parsed.guessed = 0;
+      if (!parsed.sessions) parsed.sessions = [];
+      for (let i = 1; i <= 5; i++) {
+        if (!parsed.ds[i]) parsed.ds[i] = {a:0,c:0,g:0};
+        if (parsed.ds[i].g === undefined) parsed.ds[i].g = 0;
+      }
+      return parsed;
+    }
+  } catch(e) {
+    console.log("No saved progress found, starting fresh");
+  }
+  return null;
+}
+
+function saveProgress(p) {
+  try {
+    localStorage.setItem("comptia-a-progress", JSON.stringify(p));
+  } catch(e) {
+    console.error("Failed to save progress:", e);
+  }
+}
+
+function CopyProgress({ prog }) {
+  const [copied, setCopied] = useState(false);
+
+  function buildReport() {
+    const pct = prog.total > 0 ? Math.round((prog.correct/prog.total)*100) : 0;
+    const gTotal = prog.guessed || 0;
+    const knownC = prog.correct - (prog.guessed || 0);
+    const knownT = prog.total - gTotal;
+    const realPct = knownT > 0 ? Math.round((knownC/knownT)*100) : 0;
+    let txt = "CompTIA A+ 220-1101 Progress Report\n";
+    txt += "Total: " + prog.correct + "/" + prog.total + " (" + pct + "%)\n";
+    if (gTotal > 0) txt += "Guessed: " + gTotal + " | Real accuracy (no guesses): " + realPct + "%\n";
+    txt += "\nDomain Breakdown:\n";
+    DOMAINS.forEach(function(d) {
+      const ds = prog.ds[d.id];
+      const dp = ds.a > 0 ? Math.round((ds.c/ds.a)*100) : 0;
+      const gn = ds.g || 0;
+      txt += d.icon + " " + d.name + " (" + d.w + "): " + ds.c + "/" + ds.a + " " + (ds.a > 0 ? "(" + dp + "%)" : "(not started)") + (gn > 0 ? " [" + gn + " guessed]" : "") + "\n";
+    });
+    if (prog.exams.length > 0) {
+      txt += "\nExam History:\n";
+      prog.exams.forEach(function(e) {
+        txt += e.date + ": " + e.score + "/900 " + (e.pass ? "PASS" : "FAIL") + " (" + e.c + "/" + e.t + ")\n";
+      });
+    }
+    if (prog.sessions && prog.sessions.length > 0) {
+      txt += "\nLast 5 Sessions:\n";
+      prog.sessions.slice(-5).reverse().forEach(function(s) {
+        const label = s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains";
+        txt += s.date + " " + label + ": " + s.correct + "/" + s.total + "\n";
+      });
+    }
+    return txt;
+  }
+
+  function handleCopy() {
+    const text = buildReport();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        setCopied(true);
+        setTimeout(function() { setCopied(false); }, 2000);
+      }).catch(function() {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    setCopied(true);
+    setTimeout(function() { setCopied(false); }, 2000);
+  }
+
+  return (
+    <button onClick={handleCopy} style={{ width:"100%", marginTop:28, padding:"14px", background: copied ? "#34d39915" : "#111", border:"1px solid " + (copied ? "#34d39944" : "#1a1a1a"), borderRadius:8, color: copied ? "#34d399" : "#aaa", fontSize:13, fontWeight:600, cursor:"pointer", transition:"all 0.2s" }}>
+      {copied ? "\u2713 Copied! Paste it in our chat" : "\u{1F4CB} Copy Progress -- paste to Claude"}
+    </button>
+  );
+}
+
+function App() {
+  const [view, setView] = useState("home");
+  const [mode, setMode] = useState(null);
+  const [domainFilter, setDomainFilter] = useState(null);
+  const [qs, setQs] = useState([]);
+  const [qi, setQi] = useState(0);
+  const [pick, setPick] = useState(null);
+  const [locked, setLocked] = useState(false);
+  const [showExp, setShowExp] = useState(false);
+  const [guessed, setGuessed] = useState(false);
+  const [guessComment, setGuessComment] = useState("");
+  const [sessionResults, setSessionResults] = useState([]);
+  const [timer, setTimer] = useState(0);
+  const [ticking, setTicking] = useState(false);
+  const [prog, setProg] = useState(function() { return loadProgress() || FRESH; });
+  const tick = useRef(null);
+  const sessionResultsRef = useRef([]);
+
+  const save = useCallback(function(p) {
+    setProg(p);
+    saveProgress(p);
+  }, []);
+
+  useEffect(function() {
+    if (ticking) tick.current = setInterval(function() { setTimer(function(t) { return t - 1; }); }, 1000);
+    return function() { clearInterval(tick.current); };
+  }, [ticking]);
+
+  useEffect(function() {
+    if (timer <= 0 && ticking) { setTicking(false); finishWith(sessionResultsRef.current); }
+  }, [timer, ticking]);
+
+  function startStudy(domain) {
+    const pool = domain ? QUESTIONS.filter(function(q) { return q.d === domain; }) : QUESTIONS;
+    setQs(shuffle(pool).slice(0, Math.min(pool.length, 15)));
+    setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
+    setSessionResults([]); sessionResultsRef.current = []; setMode("study"); setDomainFilter(domain);
+    setView("quiz");
+  }
+
+  function startExam() {
+    setQs(shuffle(QUESTIONS).slice(0, Math.min(QUESTIONS.length, 45)));
+    setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
+    setSessionResults([]); sessionResultsRef.current = []; setMode("exam"); setDomainFilter(null);
+    setTimer(45*60); setTicking(true); setView("quiz");
+  }
+
+  function answer(i) {
+    if (locked) return;
+    setPick(i); setLocked(true); setGuessed(false); setGuessComment("");
+    if (mode === "study") setShowExp(true);
+  }
+
+  function next() {
+    const q = qs[qi];
+    const isCorrect = pick === q.c;
+    const result = { id:q.id, d:q.d, correct:isCorrect, picked:pick, guessed:guessed, comment: guessed && guessComment.trim() ? guessComment.trim() : null };
+    const newResults = [...sessionResults, result];
+    setSessionResults(newResults);
+    sessionResultsRef.current = newResults;
+
+    if (qi + 1 >= qs.length) { setTicking(false); finishWith(newResults); }
+    else { setQi(function(n) { return n+1; }); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment(""); }
+  }
+
+  function finishWith(results) {
+    setTicking(false);
+    const p = JSON.parse(JSON.stringify(prog));
+    if (p.guessed === undefined) p.guessed = 0;
+    DOMAINS.forEach(function(d) { if (p.ds[d.id].g === undefined) p.ds[d.id].g = 0; });
+
+    results.forEach(function(r) {
+      p.total++; if(r.correct) p.correct++; if(r.guessed) p.guessed++;
+      p.ds[r.d].a++; if(r.correct) p.ds[r.d].c++; if(r.guessed) p.ds[r.d].g++;
+    });
+    if (mode === "exam") {
+      const c = results.filter(function(r) { return r.correct; }).length;
+      const t = results.length;
+      const g = results.filter(function(r) { return r.guessed; }).length;
+      const score = Math.round((c/Math.max(t,1))*900);
+      p.exams.push({ date: new Date().toLocaleDateString(), score:score, c:c, t:t, g:g, pass: score >= 675 });
+    }
+    const g = results.filter(function(r) { return r.guessed; }).length;
+    p.sessions.push({ date: new Date().toLocaleDateString(), mode:mode, domain: domainFilter, total: results.length, correct: results.filter(function(r) { return r.correct; }).length, guessed: g });
+    save(p);
+    setSessionResults(results);
+    setView("results");
+  }
+
+  function resetAll() {
+    if (confirm("Reset ALL progress? This can't be undone.")) save(FRESH);
+  }
+
+  const styles = {
+    root: { minHeight:"100vh", background:"#0c0c0c", color:"#d4d4d4", fontFamily:"'JetBrains Mono', 'SF Mono', 'Fira Code', monospace", fontSize:14 },
+    container: { maxWidth:720, margin:"0 auto", padding:"20px 16px" },
+  };
+
+  // -- HOME --
+  if (view === "home") {
+    const pct = prog.total > 0 ? Math.round((prog.correct/prog.total)*100) : 0;
+    return (
+      <div style={styles.root}>
+        <div style={styles.container}>
+          <div style={{ borderBottom:"1px solid #222", paddingBottom:20, marginBottom:24 }}>
+            <div style={{ color:"#555", fontSize:11, letterSpacing:3, textTransform:"uppercase", marginBottom:6 }}>CompTIA A+ 220-1101</div>
+            <div style={{ fontSize:26, fontWeight:700, color:"#e5e5e5", letterSpacing:-0.5 }}>Core 1 Study Hub</div>
+            <div style={{ color:"#555", fontSize:12, marginTop:6 }}>60 questions &middot; 5 domains &middot; persistent tracking</div>
+          </div>
+
+          {prog.total > 0 && (
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:1, background:"#222", borderRadius:8, overflow:"hidden", marginBottom:24 }}>
+              {[
+                { l:"answered", v:prog.total },
+                { l:"accuracy", v:pct+"%" },
+                { l:"exams", v:prog.exams.length },
+              ].map(function(s,i) {
+                return (
+                  <div key={i} style={{ background:"#111", padding:"16px 12px", textAlign:"center" }}>
+                    <div style={{ fontSize:22, fontWeight:700, color:"#e5e5e5" }}>{s.v}</div>
+                    <div style={{ fontSize:10, color:"#555", letterSpacing:1, textTransform:"uppercase", marginTop:4 }}>{s.l}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <button onClick={startExam} style={{ width:"100%", padding:"18px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:20, letterSpacing:0.3, transition:"background 0.15s" }}
+            onMouseOver={function(e){e.currentTarget.style.background="#fff";}} onMouseOut={function(e){e.currentTarget.style.background="#e5e5e5";}}>
+            PRACTICE EXAM &mdash; 45 questions, 45 min
+          </button>
+
+          <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:12 }}>Study by Domain</div>
+          {DOMAINS.map(function(d) {
+            const ds = prog.ds[d.id];
+            const dp = ds.a > 0 ? Math.round((ds.c/ds.a)*100) : null;
+            const qCount = QUESTIONS.filter(function(q) { return q.d===d.id; }).length;
+            return (
+              <button key={d.id} onClick={function() { startStudy(d.id); }} style={{ width:"100%", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:"14px 16px", cursor:"pointer", display:"flex", alignItems:"center", gap:14, marginBottom:6, transition:"border-color 0.15s", color:"#d4d4d4", textAlign:"left" }}
+                onMouseOver={function(e){e.currentTarget.style.borderColor=d.color+"66";}} onMouseOut={function(e){e.currentTarget.style.borderColor="#1a1a1a";}}>
+                <span style={{ fontSize:22, width:32, textAlign:"center" }}>{d.icon}</span>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontWeight:600, fontSize:13, color:"#e5e5e5" }}>{d.name}</div>
+                  <div style={{ fontSize:11, color:"#444", marginTop:2 }}>{d.w} of exam &middot; {qCount} questions</div>
+                </div>
+                {dp !== null && (
+                  <div style={{ fontSize:13, fontWeight:700, color: dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171" }}>{dp}%</div>
+                )}
+                <div style={{ width:3, height:32, borderRadius:2, background: dp===null ? "#222" : dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171", opacity: dp===null ? 0.3 : 0.8 }} />
+              </button>
+            );
+          })}
+
+          <button onClick={function() { startStudy(null); }} style={{ width:"100%", padding:"12px", background:"transparent", border:"1px solid #222", borderRadius:8, color:"#555", fontSize:12, fontWeight:600, cursor:"pointer", marginTop:16, marginBottom:8 }}>
+            RANDOM MIX &mdash; All Domains
+          </button>
+          <div style={{ display:"flex", gap:8, marginTop:8 }}>
+            <button onClick={function() { setView("dashboard"); }} style={{ flex:1, padding:"12px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#888", fontSize:12, fontWeight:600, cursor:"pointer" }}>{"\u{1F4CA}"} Dashboard</button>
+            {prog.total > 0 && (
+              <button onClick={resetAll} style={{ padding:"12px 16px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#f87171", fontSize:12, fontWeight:600, cursor:"pointer" }}>Reset</button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // -- QUIZ --
+  if (view === "quiz") {
+    const q = qs[qi];
+    if (!q) return null;
+    const pBar = (qi / qs.length) * 100;
+    const isRight = pick === q.c;
+
+    return (
+      <div style={styles.root}>
+        <div style={styles.container}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
+            <span style={{ fontSize:12, color:"#555" }}><span style={{ color:"#e5e5e5", fontWeight:700 }}>{qi+1}</span>/{qs.length}</span>
+            {mode === "exam" && (
+              <span style={{ fontSize:16, fontWeight:700, color: timer<300?"#f87171":timer<600?"#fbbf24":"#34d399", fontVariantNumeric:"tabular-nums" }}>{fmt(timer)}</span>
+            )}
+            <span style={{ fontSize:11, color:"#555", padding:"3px 10px", border:"1px solid #222", borderRadius:20 }}>{DOMAIN_NAMES[q.d]}</span>
+          </div>
+
+          <div style={{ height:2, background:"#1a1a1a", borderRadius:1, marginBottom:24, overflow:"hidden" }}>
+            <div style={{ height:"100%", width:pBar+"%", background:"#555", transition:"width 0.3s" }} />
+          </div>
+
+          <div style={{ fontSize:11, color: (DOMAINS.find(function(d){return d.id===q.d;}) || {}).color || "#555", fontWeight:600, letterSpacing:1, marginBottom:10, textTransform:"uppercase" }}>{q.obj}</div>
+
+          <div style={{ fontSize:16, fontWeight:500, lineHeight:1.6, color:"#e5e5e5", marginBottom:28 }}>{q.q}</div>
+
+          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+            {q.o.map(function(opt, i) {
+              var bg = "#111", border = "#1a1a1a", tc = "#d4d4d4", indicator = null;
+              if (locked) {
+                if (i === q.c) { bg="#34d39910"; border="#34d39944"; tc="#34d399"; indicator="\u2713"; }
+                else if (i === pick && !isRight) { bg="#f8717110"; border="#f8717144"; tc="#f87171"; indicator="\u2717"; }
+                else { tc="#333"; }
+              }
+              return (
+                <button key={i} onClick={function() { answer(i); }} disabled={locked} style={{ padding:"14px 16px", background:bg, border:"1px solid "+border, borderRadius:8, color:tc, fontSize:14, cursor:locked?"default":"pointer", textAlign:"left", transition:"all 0.12s", display:"flex", alignItems:"center", gap:12 }}
+                  onMouseOver={function(e) { if(!locked) { e.currentTarget.style.borderColor="#333"; e.currentTarget.style.background="#161616"; }}}
+                  onMouseOut={function(e) { if(!locked) { e.currentTarget.style.borderColor="#1a1a1a"; e.currentTarget.style.background="#111"; }}}>
+                  <span style={{ width:26, height:26, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, background: indicator ? (i===q.c ? "#34d399" : "#f87171") : "#1a1a1a", color: indicator ? "#0c0c0c" : "#555", flexShrink:0 }}>
+                    {indicator || String.fromCharCode(65+i)}
+                  </span>
+                  <span style={{ lineHeight:1.5 }}>{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {locked && (
+            <div style={{ marginTop:20 }}>
+              {(mode === "study" || showExp) ? (
+                <div style={{ background: isRight ? "#34d39908" : "#f8717108", border:"1px solid "+(isRight ? "#34d39922" : "#f8717122"), borderRadius:8, padding:"14px 16px", marginBottom:16 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color: isRight ? "#34d399" : "#f87171", marginBottom:6 }}>{isRight ? "Correct" : "Incorrect"}</div>
+                  <div style={{ fontSize:13, color:"#999", lineHeight:1.7 }}>{q.ex}</div>
+                </div>
+              ) : (
+                <button onClick={function() { setShowExp(true); }} style={{ background:"transparent", border:"1px solid #222", borderRadius:6, padding:"8px 16px", color:"#555", fontSize:12, cursor:"pointer", marginBottom:16 }}>Show explanation</button>
+              )}
+
+              <div style={{ marginBottom:12 }}>
+                <button onClick={function() { setGuessed(function(g) { return !g; }); }} style={{ width:"100%", padding:"10px 14px", background: guessed ? "#fbbf2415" : "transparent", border:"1px solid "+(guessed ? "#fbbf2444" : "#222"), borderRadius: guessed ? "8px 8px 0 0" : 8, color: guessed ? "#fbbf24" : "#444", fontSize:12, fontWeight:600, cursor:"pointer", transition:"all 0.15s", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                  <span style={{ fontSize:14 }}>{"\u{1F3B2}"}</span>
+                  {guessed ? "Marked as guess -- won't count as known" : "I guessed -- be honest!"}
+                </button>
+                {guessed && (
+                  <div style={{ border:"1px solid #fbbf2444", borderTop:"none", borderRadius:"0 0 8px 8px", padding:"10px 12px", background:"#fbbf2408" }}>
+                    <textarea
+                      value={guessComment}
+                      onChange={function(e) { setGuessComment(e.target.value); }}
+                      placeholder="What was your reasoning? (optional)"
+                      rows={2}
+                      style={{ width:"100%", background:"#0c0c0c", border:"1px solid #333", borderRadius:6, padding:"8px 10px", color:"#ccc", fontSize:12, fontFamily:"inherit", resize:"vertical", outline:"none", boxSizing:"border-box" }}
+                      onFocus={function(e) { e.target.style.borderColor="#fbbf2466"; }}
+                      onBlur={function(e) { e.target.style.borderColor="#333"; }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <button onClick={next} style={{ width:"100%", padding:"14px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:14, fontWeight:700, cursor:"pointer" }}>
+                {qi+1 >= qs.length ? "See Results" : "Next \u2192"}
+              </button>
+            </div>
+          )}
+
+          {mode === "exam" && (
+            <button onClick={function() { if(confirm("End exam early?")) finishWith(sessionResultsRef.current); }} style={{ marginTop:14, background:"transparent", border:"none", color:"#333", fontSize:11, cursor:"pointer", textDecoration:"underline" }}>end exam early</button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // -- RESULTS --
+  if (view === "results") {
+    const correct = sessionResults.filter(function(r){return r.correct;}).length;
+    const total = sessionResults.length;
+    const guessedCount = sessionResults.filter(function(r){return r.guessed;}).length;
+    const knownCorrect = sessionResults.filter(function(r){return r.correct && !r.guessed;}).length;
+    const knownTotal = sessionResults.filter(function(r){return !r.guessed;}).length;
+    const pct = Math.round((correct/Math.max(total,1))*100);
+    const realPct = knownTotal > 0 ? Math.round((knownCorrect/knownTotal)*100) : 0;
+    const score = mode==="exam" ? Math.round((correct/Math.max(total,1))*900) : null;
+    const passed = score !== null && score >= 675;
+    const missed = sessionResults.filter(function(r){return !r.correct;});
+    const luckyGuesses = sessionResults.filter(function(r){return r.correct && r.guessed;});
+
+    const domBreak = DOMAINS.map(function(d) {
+      const dr = sessionResults.filter(function(r){return r.d===d.id;});
+      const dc = dr.filter(function(r){return r.correct;}).length;
+      const dg = dr.filter(function(r){return r.guessed;}).length;
+      return { id:d.id, name:d.name, icon:d.icon, w:d.w, color:d.color, total:dr.length, correct:dc, guessed:dg, pct: dr.length>0 ? Math.round((dc/dr.length)*100) : null };
+    }).filter(function(d) { return d.total > 0; });
+
+    return (
+      <div style={styles.root}>
+        <div style={styles.container}>
+          <div style={{ textAlign:"center", paddingTop:20, marginBottom:32 }}>
+            {score !== null && (
+              <React.Fragment>
+                <div style={{ fontSize:56, fontWeight:900, color: passed?"#34d399":"#f87171", letterSpacing:-2 }}>{score}</div>
+                <div style={{ fontSize:16, fontWeight:700, color: passed?"#34d399":"#f87171", marginBottom:4 }}>{passed ? "PASSED" : "NOT YET"}</div>
+                <div style={{ fontSize:12, color:"#444" }}>675 needed to pass</div>
+              </React.Fragment>
+            )}
+            <div style={{ fontSize:14, color:"#888", marginTop:score?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
+            {guessedCount > 0 && (
+              <div style={{ marginTop:8 }}>
+                <div style={{ fontSize:12, color:"#fbbf24" }}>{"\u{1F3B2}"} {guessedCount} guessed &mdash; real accuracy: {knownCorrect}/{knownTotal} ({realPct}%)</div>
+                {luckyGuesses.length > 0 && (
+                  <div style={{ fontSize:11, color:"#666", marginTop:2 }}>{luckyGuesses.length} lucky guess{luckyGuesses.length>1?"es":""} (correct but flagged)</div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginBottom:28 }}>
+            <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Domain Breakdown</div>
+            {domBreak.map(function(d) {
+              return (
+                <div key={d.id} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:12 }}>
+                  <span style={{ fontSize:16, width:24 }}>{d.icon}</span>
+                  <div style={{ flex:1 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
+                      <span style={{ fontSize:12, fontWeight:600, color:"#aaa" }}>{d.name}</span>
+                      <span style={{ fontSize:12, fontWeight:700, color: d.pct>=75?"#34d399":d.pct>=50?"#fbbf24":"#f87171" }}>{d.correct}/{d.total}{d.guessed > 0 ? " ("+d.guessed+"\u{1F3B2})" : ""}</span>
+                    </div>
+                    <div style={{ height:3, background:"#1a1a1a", borderRadius:2, overflow:"hidden" }}>
+                      <div style={{ height:"100%", width:d.pct+"%", background: d.pct>=75?"#34d399":d.pct>=50?"#fbbf24":"#f87171", borderRadius:2 }} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {missed.length > 0 && (
+            <div style={{ marginBottom:28 }}>
+              <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Missed Questions</div>
+              {missed.map(function(r, i) {
+                const q = QUESTIONS.find(function(x) { return x.id === r.id; });
+                if (!q) return null;
+                return (
+                  <div key={i} style={{ background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:14, marginBottom:8 }}>
+                    <div style={{ fontSize:13, fontWeight:500, color:"#ccc", marginBottom:8, lineHeight:1.5 }}>{q.q}</div>
+                    <div style={{ fontSize:12, color:"#f87171", marginBottom:3 }}>You said: {q.o[r.picked]}</div>
+                    <div style={{ fontSize:12, color:"#34d399", marginBottom:8 }}>Answer: {q.o[q.c]}</div>
+                    {r.comment && <div style={{ fontSize:12, color:"#fbbf24", marginBottom:8, fontStyle:"italic" }}>Your note: "{r.comment}"</div>}
+                    <div style={{ fontSize:12, color:"#666", lineHeight:1.6 }}>{q.ex}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {luckyGuesses.length > 0 && (
+            <div style={{ marginBottom:28 }}>
+              <div style={{ fontSize:11, color:"#fbbf24", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>{"\u{1F3B2}"} Lucky Guesses &mdash; review these</div>
+              {luckyGuesses.map(function(r, i) {
+                const q = QUESTIONS.find(function(x) { return x.id === r.id; });
+                if (!q) return null;
+                return (
+                  <div key={i} style={{ background:"#111", border:"1px solid #fbbf2422", borderRadius:8, padding:14, marginBottom:8 }}>
+                    <div style={{ fontSize:13, fontWeight:500, color:"#ccc", marginBottom:8, lineHeight:1.5 }}>{q.q}</div>
+                    <div style={{ fontSize:12, color:"#fbbf24", marginBottom:8 }}>Answer: {q.o[q.c]}</div>
+                    {r.comment && <div style={{ fontSize:12, color:"#fbbf24", marginBottom:8, fontStyle:"italic", opacity:0.7 }}>Your note: "{r.comment}"</div>}
+                    <div style={{ fontSize:12, color:"#666", lineHeight:1.6 }}>{q.ex}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div style={{ display:"flex", gap:8 }}>
+            <button onClick={function() { setView("home"); }} style={{ flex:1, padding:"14px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:14, fontWeight:700, cursor:"pointer" }}>Home</button>
+            <button onClick={function() { setView("dashboard"); }} style={{ flex:1, padding:"14px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#888", fontSize:13, fontWeight:600, cursor:"pointer" }}>Dashboard</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // -- DASHBOARD --
+  if (view === "dashboard") {
+    const pct = prog.total>0 ? Math.round((prog.correct/prog.total)*100) : 0;
+    return (
+      <div style={styles.root}>
+        <div style={styles.container}>
+          <button onClick={function() { setView("home"); }} style={{ background:"transparent", border:"none", color:"#555", fontSize:12, cursor:"pointer", padding:0, marginBottom:20 }}>&larr; back</button>
+
+          <div style={{ fontSize:22, fontWeight:700, color:"#e5e5e5", marginBottom:24 }}>Progress Dashboard</div>
+
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:1, background:"#222", borderRadius:8, overflow:"hidden", marginBottom:28 }}>
+            <div style={{ background:"#111", padding:20, textAlign:"center" }}>
+              <div style={{ fontSize:32, fontWeight:900, color:"#e5e5e5" }}>{prog.total}</div>
+              <div style={{ fontSize:10, color:"#555", letterSpacing:1, textTransform:"uppercase", marginTop:4 }}>total questions</div>
+            </div>
+            <div style={{ background:"#111", padding:20, textAlign:"center" }}>
+              <div style={{ fontSize:32, fontWeight:900, color: pct>=75?"#34d399":pct>=50?"#fbbf24":"#f87171" }}>{pct}%</div>
+              <div style={{ fontSize:10, color:"#555", letterSpacing:1, textTransform:"uppercase", marginTop:4 }}>accuracy</div>
+            </div>
+          </div>
+
+          <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Domain Mastery</div>
+          {DOMAINS.map(function(d) {
+            const ds = prog.ds[d.id];
+            const dp = ds.a>0 ? Math.round((ds.c/ds.a)*100) : 0;
+            const label = ds.a===0 ? "not started" : dp>=80 ? "strong" : dp>=60 ? "developing" : "needs work";
+            const lc = ds.a===0 ? "#333" : dp>=80 ? "#34d399" : dp>=60 ? "#fbbf24" : "#f87171";
+            return (
+              <div key={d.id} style={{ background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:"14px 16px", marginBottom:8 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:18 }}>{d.icon}</span>
+                    <div>
+                      <div style={{ fontWeight:600, fontSize:13, color:"#ccc" }}>{d.name}</div>
+                      <div style={{ fontSize:11, color:"#444" }}>{ds.a} answered &middot; {ds.c} correct</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize:11, fontWeight:700, color:lc, textTransform:"uppercase", letterSpacing:1 }}>{label}</span>
+                </div>
+                <div style={{ height:4, background:"#1a1a1a", borderRadius:2, overflow:"hidden" }}>
+                  <div style={{ height:"100%", width:dp+"%", background:d.color, borderRadius:2, transition:"width 0.5s", opacity:0.8 }} />
+                </div>
+              </div>
+            );
+          })}
+
+          {prog.exams.length > 0 && (
+            <div style={{ marginTop:24 }}>
+              <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Exam History</div>
+              {prog.exams.slice().reverse().map(function(e,i) {
+                return (
+                  <div key={i} style={{ background:"#111", border:"1px solid "+(e.pass?"#34d39922":"#f8717122"), borderRadius:8, padding:"12px 16px", marginBottom:6, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <div>
+                      <div style={{ fontWeight:600, fontSize:13, color:"#aaa" }}>{e.date}</div>
+                      <div style={{ fontSize:11, color:"#444" }}>{e.c}/{e.t} correct</div>
+                    </div>
+                    <div style={{ textAlign:"right" }}>
+                      <div style={{ fontSize:20, fontWeight:900, color: e.pass?"#34d399":"#f87171" }}>{e.score}</div>
+                      <div style={{ fontSize:10, fontWeight:700, color: e.pass?"#34d399":"#f87171", letterSpacing:1 }}>{e.pass?"PASS":"FAIL"}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {prog.sessions && prog.sessions.length > 0 && (
+            <div style={{ marginTop:24 }}>
+              <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Recent Sessions</div>
+              {prog.sessions.slice().reverse().slice(0,10).map(function(s,i) {
+                return (
+                  <div key={i} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #1a1a1a", fontSize:12 }}>
+                    <span style={{ color:"#666" }}>{s.date} &middot; {s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
+                    <span style={{ color: Math.round((s.correct/Math.max(s.total,1))*100)>=75 ? "#34d399" : "#fbbf24", fontWeight:700 }}>{s.correct}/{s.total}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <CopyProgress prog={prog} />
+
+          <div style={{ marginTop:16, padding:16, border:"1px solid #1a1a1a", borderRadius:8 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#888", marginBottom:6 }}>{"\u{1F4CC}"} Exam Info</div>
+            <div style={{ fontSize:12, color:"#555", lineHeight:1.7 }}>
+              Real exam: 90 questions, 90 minutes, 675/900 to pass. Domain 5 (Troubleshooting) = 29% &mdash; biggest chunk. Ports &amp; protocols are heavily tested. Focus on domains below 75%.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
