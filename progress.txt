@@ -1,0 +1,12 @@
+CompTIA A+ 220-1101 Core 1 -- Study Progress Log
+==================================================
+
+How to use:
+1. Open https://lmaocalvin.github.io/CompTIA-a-/ on your phone or computer
+2. Take a quiz session (domain drill or practice exam)
+3. Go to Dashboard > tap "Copy Progress -- paste to Claude"
+4. Paste the copied text to Claude in chat
+5. Claude will update this file with your latest results and recommendations
+
+--------------------------------------------------
+No sessions recorded yet. Start studying!
