@@ -3,21 +3,40 @@ CompTIA A+ 220-1101 Core 1 -- Study Progress Log
 
 How to use:
 1. Open the quiz app on your phone or computer
-2. Take the BASELINE DIAGNOSTIC first (20 questions, all domains)
+2. Take study sessions or practice exams
 3. Copy your results and paste them here in chat
-4. Claude will update this file with your baseline + study plan
+4. Claude will update this file with your scores + recommendations
 5. After each session, paste results to keep tracking progress
 
 ==================================================
-BASELINE
+BASELINE DIAGNOSTIC
 ==================================================
-Status: NOT YET TAKEN
--- Take the 20-question Baseline Diagnostic to establish your starting point --
+Date: 2026-03-10
+Overall: 14/20 (70%)
+Guessed: 6 | Real accuracy (no guesses): 12/14 (86%)
+
+  Domain 1 - Mobile Devices (15%):         3/4 (75%) -- STRONG [1 guessed]
+  Domain 2 - Networking (20%):             1/4 (25%) -- WEAK   [2 guessed]
+  Domain 3 - Hardware (25%):               4/4 (100%) -- STRONG [1 guessed]
+  Domain 4 - Virtualization & Cloud (11%): 3/4 (75%) -- STRONG [1 guessed]
+  Domain 5 - Troubleshooting (29%):        3/4 (75%) -- STRONG [1 guessed]
+
+  Missed:
+  - [Networking 2.5] Cable tester vs toner probe (picked toner probe) [GUESSED]
+  - [Virt/Cloud 4.1] SaaS vs IaaS -- didn't know the service models yet [GUESSED]
+  - [Networking 2.2] Router = Layer 3 -- picked Hub [GUESSED]
+  - [Mobile 1.4] CDMA vs GSM history -- picked GSM [GUESSED]
+  - [Troubleshooting 5.7] "Dest host unreachable" to gateway = physical layer, not firewall
+  - [Networking 2.1] DNS = port 53 -- picked 67 (that's DHCP)
+
+  Lucky guesses (got right but didn't truly know):
+  - [Hardware 3.1] DDR4 DIMM = 288 pins
+  - [Troubleshooting 5.2] Continuous short beeps = RAM problem
 
 ==================================================
 STUDY SESSIONS
 ==================================================
-No sessions recorded yet.
+No additional sessions yet. Baseline was first session.
 
 ==================================================
 EXAM ATTEMPTS
@@ -25,15 +44,48 @@ EXAM ATTEMPTS
 No exam attempts yet.
 
 ==================================================
-DOMAIN TRACKER
+DOMAIN TRACKER (updated 2026-03-10)
 ==================================================
-Domain 1 - Mobile Devices (15%):     -- / -- (awaiting baseline)
-Domain 2 - Networking (20%):         -- / -- (awaiting baseline)
-Domain 3 - Hardware (25%):           -- / -- (awaiting baseline)
-Domain 4 - Virtualization & Cloud (11%): -- / -- (awaiting baseline)
-Domain 5 - Troubleshooting (29%):    -- / -- (awaiting baseline)
+Domain 1 - Mobile Devices (15%):            75%  STRONG      (review CDMA/GSM history)
+Domain 2 - Networking (20%):               25%  *** WEAK *** (priority #1)
+Domain 3 - Hardware (25%):                100%  STRONG      (but 1 lucky guess -- review DDR pin counts)
+Domain 4 - Virtualization & Cloud (11%):   75%  STRONG      (review IaaS vs PaaS vs SaaS)
+Domain 5 - Troubleshooting (29%):          75%  STRONG      (review error messages & physical layer clues)
 
 ==================================================
-STUDY PLAN
+STUDY PLAN (generated 2026-03-10)
 ==================================================
-Awaiting baseline results to generate personalized study plan.
+
+Priority order based on baseline + exam weight:
+
+  #1 >>> NETWORKING (scored 25%, worth 20% of exam) <<<
+     This is the clear weak spot. Focus areas:
+     - Port numbers: memorize the big ones (21,22,23,25,53,67/68,80,110,143,443,445,993,995,3389,5900)
+     - OSI layers: know which devices operate at which layer
+     - Network tools: cable tester vs toner probe vs loopback plug vs Wi-Fi analyzer
+     - DNS vs DHCP: you mixed up port 53 (DNS) with port 67 (DHCP)
+     Recommended: Run the Networking domain drill 3-5 times until you're consistently 75%+
+
+  #2  Troubleshooting (scored 75%, worth 29% of exam)
+     Biggest chunk of the real exam. You're solid but need to lock in:
+     - Error messages: "destination host unreachable" = physical/Layer 1-2 problem
+     - POST beep codes: you guessed the RAM one -- study beep patterns
+     Recommended: 2-3 domain drill sessions
+
+  #3  Hardware (scored 100%, worth 25% of exam)
+     Strong showing but you guessed DDR4 pin count (288). Quick review:
+     - DDR3 DIMM=240, DDR4 DIMM=288, DDR4 SODIMM=260, DDR5 DIMM=288
+     Recommended: 1 domain drill to confirm mastery
+
+  #4  Mobile Devices (scored 75%, worth 15% of exam)
+     Know CDMA vs GSM: CDMA (Verizon/Sprint) = no SIM. GSM (AT&T/T-Mobile) = SIM.
+     Recommended: 1 domain drill
+
+  #5  Virtualization & Cloud (scored 75%, worth 11% of exam)
+     Smallest exam weight. Lock in the service models:
+     - SaaS = ready apps (Gmail, 365). PaaS = dev platform. IaaS = VMs/infra. DaaS = virtual desktops.
+     Recommended: 1 domain drill
+
+--------------------------------------------------
+Next milestone: Get Networking to 75%+ on a domain drill
+--------------------------------------------------
