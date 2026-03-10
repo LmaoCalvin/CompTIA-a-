@@ -288,7 +288,7 @@ function CopyProgress({ prog }) {
     if (prog.sessions && prog.sessions.length > 0) {
       txt += "\nLast 5 Sessions:\n";
       prog.sessions.slice(-5).reverse().forEach(function(s) {
-        const label = s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains";
+        const label = s.mode === "baseline" ? "Baseline Diagnostic" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains";
         txt += s.date + " " + label + ": " + s.correct + "/" + s.total + "\n";
       });
     }
@@ -329,6 +329,67 @@ function CopyProgress({ prog }) {
   );
 }
 
+function BaselineReport({ results, domBreak, correct, total, pct, guessedCount, knownCorrect, knownTotal, realPct }) {
+  const [copied, setCopied] = useState(false);
+
+  function buildBaselineText() {
+    var txt = "=== BASELINE DIAGNOSTIC RESULTS ===\n";
+    txt += "Date: " + new Date().toLocaleDateString() + "\n";
+    txt += "Score: " + correct + "/" + total + " (" + pct + "%)\n";
+    if (guessedCount > 0) txt += "Guessed: " + guessedCount + " | Real accuracy: " + knownCorrect + "/" + knownTotal + " (" + realPct + "%)\n";
+    txt += "\nDomain Breakdown:\n";
+    domBreak.forEach(function(d) {
+      var status = d.pct >= 75 ? "STRONG" : d.pct >= 50 ? "DEVELOPING" : "WEAK";
+      txt += d.icon + " " + d.name + " (" + d.w + "): " + d.correct + "/" + d.total + " (" + d.pct + "%) -- " + status;
+      if (d.guessed > 0) txt += " [" + d.guessed + " guessed]";
+      txt += "\n";
+    });
+    txt += "\nMissed Questions:\n";
+    results.filter(function(r) { return !r.correct; }).forEach(function(r) {
+      var q = QUESTIONS.find(function(x) { return x.id === r.id; });
+      if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Your answer: " + q.o[r.picked] + " | Correct: " + q.o[q.c] + (r.guessed ? " [GUESSED]" : "") + "\n";
+    });
+    var luckyOnes = results.filter(function(r) { return r.correct && r.guessed; });
+    if (luckyOnes.length > 0) {
+      txt += "\nLucky Guesses (got right but flagged):\n";
+      luckyOnes.forEach(function(r) {
+        var q = QUESTIONS.find(function(x) { return x.id === r.id; });
+        if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n";
+      });
+    }
+    txt += "\n=== PASTE THIS TO CLAUDE TO SET YOUR BASELINE ===\n";
+    return txt;
+  }
+
+  function handleCopy() {
+    var text = buildBaselineText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() { setCopied(true); setTimeout(function() { setCopied(false); }, 2500); }).catch(function() { fallback(text); });
+    } else { fallback(text); }
+  }
+
+  function fallback(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+    setCopied(true); setTimeout(function() { setCopied(false); }, 2500);
+  }
+
+  return (
+    <div style={{ marginBottom:24 }}>
+      <div style={{ background:"linear-gradient(135deg, #a78bfa15, #60a5fa15)", border:"1px solid #a78bfa33", borderRadius:12, padding:20 }}>
+        <div style={{ fontSize:13, fontWeight:700, color:"#a78bfa", marginBottom:8 }}>Baseline Complete!</div>
+        <div style={{ fontSize:12, color:"#999", lineHeight:1.7, marginBottom:16 }}>
+          Copy your results below and paste them to Claude. This creates your personalized study baseline so Claude can track your progress and focus on your weak areas.
+        </div>
+        <button onClick={handleCopy} style={{ width:"100%", padding:"14px", background: copied ? "#34d39915" : "#111", border:"1px solid " + (copied ? "#34d39944" : "#a78bfa44"), borderRadius:8, color: copied ? "#34d399" : "#a78bfa", fontSize:13, fontWeight:700, cursor:"pointer", transition:"all 0.2s" }}>
+          {copied ? "\u2713 Copied! Now paste it in our chat" : "\u{1F4CB} Copy Baseline Results for Claude"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [view, setView] = useState("home");
   const [mode, setMode] = useState(null);
@@ -361,6 +422,19 @@ function App() {
     if (timer <= 0 && ticking) { setTicking(false); finishWith(sessionResultsRef.current); }
   }, [timer, ticking]);
 
+  function startBaseline() {
+    /* 20Q diagnostic: 4 questions per domain, easiest-first mix */
+    var picked = [];
+    DOMAINS.forEach(function(d) {
+      var pool = shuffle(QUESTIONS.filter(function(q) { return q.d === d.id; }));
+      picked = picked.concat(pool.slice(0, 4));
+    });
+    setQs(shuffle(picked));
+    setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
+    setSessionResults([]); sessionResultsRef.current = []; setMode("baseline"); setDomainFilter(null);
+    setView("quiz");
+  }
+
   function startStudy(domain) {
     const pool = domain ? QUESTIONS.filter(function(q) { return q.d === domain; }) : QUESTIONS;
     setQs(shuffle(pool).slice(0, Math.min(pool.length, 15)));
@@ -379,7 +453,7 @@ function App() {
   function answer(i) {
     if (locked) return;
     setPick(i); setLocked(true); setGuessed(false); setGuessComment("");
-    if (mode === "study") setShowExp(true);
+    if (mode === "study" || mode === "baseline") setShowExp(true);
   }
 
   function next() {
@@ -410,6 +484,17 @@ function App() {
       const g = results.filter(function(r) { return r.guessed; }).length;
       const score = Math.round((c/Math.max(t,1))*900);
       p.exams.push({ date: new Date().toLocaleDateString(), score:score, c:c, t:t, g:g, pass: score >= 675 });
+    }
+    if (mode === "baseline") {
+      if (!p.baselines) p.baselines = [];
+      const domScores = {};
+      DOMAINS.forEach(function(d) {
+        const dr = results.filter(function(r) { return r.d === d.id; });
+        const dc = dr.filter(function(r) { return r.correct; }).length;
+        const dg = dr.filter(function(r) { return r.guessed; }).length;
+        domScores[d.id] = { total: dr.length, correct: dc, guessed: dg, pct: dr.length > 0 ? Math.round((dc/dr.length)*100) : 0 };
+      });
+      p.baselines.push({ date: new Date().toLocaleDateString(), correct: results.filter(function(r){return r.correct;}).length, total: results.length, guessed: results.filter(function(r){return r.guessed;}).length, domains: domScores });
     }
     const g = results.filter(function(r) { return r.guessed; }).length;
     p.sessions.push({ date: new Date().toLocaleDateString(), mode:mode, domain: domainFilter, total: results.length, correct: results.filter(function(r) { return r.correct; }).length, guessed: g });
@@ -454,6 +539,19 @@ function App() {
                 );
               })}
             </div>
+          )}
+
+          {!prog.sessions || !prog.sessions.some(function(s) { return s.mode === "baseline"; }) ? (
+            <button onClick={startBaseline} style={{ width:"100%", padding:"18px", background:"linear-gradient(135deg, #a78bfa, #60a5fa)", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:12, letterSpacing:0.3, transition:"opacity 0.15s", position:"relative", overflow:"hidden" }}
+              onMouseOver={function(e){e.currentTarget.style.opacity="0.9";}} onMouseOut={function(e){e.currentTarget.style.opacity="1";}}>
+              BASELINE DIAGNOSTIC &mdash; 20 questions
+              <div style={{ fontSize:11, fontWeight:400, marginTop:4, opacity:0.8 }}>Find your strengths &amp; weaknesses first</div>
+            </button>
+          ) : (
+            <button onClick={startBaseline} style={{ width:"100%", padding:"14px", background:"#111", border:"1px solid #a78bfa33", borderRadius:8, fontSize:13, fontWeight:600, cursor:"pointer", marginBottom:12, color:"#a78bfa", transition:"border-color 0.15s" }}
+              onMouseOver={function(e){e.currentTarget.style.borderColor="#a78bfa66";}} onMouseOut={function(e){e.currentTarget.style.borderColor="#a78bfa33";}}>
+              RETAKE DIAGNOSTIC &mdash; 20 questions
+            </button>
           )}
 
           <button onClick={startExam} style={{ width:"100%", padding:"18px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:20, letterSpacing:0.3, transition:"background 0.15s" }}
@@ -613,6 +711,12 @@ function App() {
       <div style={styles.root}>
         <div style={styles.container}>
           <div style={{ textAlign:"center", paddingTop:20, marginBottom:32 }}>
+            {mode === "baseline" && (
+              <React.Fragment>
+                <div style={{ fontSize:11, color:"#a78bfa", letterSpacing:3, textTransform:"uppercase", marginBottom:8 }}>Baseline Diagnostic</div>
+                <div style={{ fontSize:56, fontWeight:900, color: pct>=75?"#34d399":pct>=50?"#fbbf24":"#f87171", letterSpacing:-2 }}>{pct}%</div>
+              </React.Fragment>
+            )}
             {score !== null && (
               <React.Fragment>
                 <div style={{ fontSize:56, fontWeight:900, color: passed?"#34d399":"#f87171", letterSpacing:-2 }}>{score}</div>
@@ -620,7 +724,7 @@ function App() {
                 <div style={{ fontSize:12, color:"#444" }}>675 needed to pass</div>
               </React.Fragment>
             )}
-            <div style={{ fontSize:14, color:"#888", marginTop:score?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
+            <div style={{ fontSize:14, color:"#888", marginTop:score||mode==="baseline"?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
             {guessedCount > 0 && (
               <div style={{ marginTop:8 }}>
                 <div style={{ fontSize:12, color:"#fbbf24" }}>{"\u{1F3B2}"} {guessedCount} guessed &mdash; real accuracy: {knownCorrect}/{knownTotal} ({realPct}%)</div>
@@ -686,6 +790,10 @@ function App() {
                 );
               })}
             </div>
+          )}
+
+          {mode === "baseline" && (
+            <BaselineReport results={sessionResults} domBreak={domBreak} correct={correct} total={total} pct={pct} guessedCount={guessedCount} knownCorrect={knownCorrect} knownTotal={knownTotal} realPct={realPct} />
           )}
 
           <div style={{ display:"flex", gap:8 }}>
@@ -769,7 +877,7 @@ function App() {
               {prog.sessions.slice().reverse().slice(0,10).map(function(s,i) {
                 return (
                   <div key={i} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #1a1a1a", fontSize:12 }}>
-                    <span style={{ color:"#666" }}>{s.date} &middot; {s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
+                    <span style={{ color:"#666" }}>{s.date} &middot; {s.mode === "baseline" ? "Baseline" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
                     <span style={{ color: Math.round((s.correct/Math.max(s.total,1))*100)>=75 ? "#34d399" : "#fbbf24", fontWeight:700 }}>{s.correct}/{s.total}</span>
                   </div>
                 );

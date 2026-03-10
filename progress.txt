@@ -2,11 +2,38 @@ CompTIA A+ 220-1101 Core 1 -- Study Progress Log
 ==================================================
 
 How to use:
-1. Open https://lmaocalvin.github.io/CompTIA-a-/ on your phone or computer
-2. Take a quiz session (domain drill or practice exam)
-3. Go to Dashboard > tap "Copy Progress -- paste to Claude"
-4. Paste the copied text to Claude in chat
-5. Claude will update this file with your latest results and recommendations
+1. Open the quiz app on your phone or computer
+2. Take the BASELINE DIAGNOSTIC first (20 questions, all domains)
+3. Copy your results and paste them here in chat
+4. Claude will update this file with your baseline + study plan
+5. After each session, paste results to keep tracking progress
 
---------------------------------------------------
-No sessions recorded yet. Start studying!
+==================================================
+BASELINE
+==================================================
+Status: NOT YET TAKEN
+-- Take the 20-question Baseline Diagnostic to establish your starting point --
+
+==================================================
+STUDY SESSIONS
+==================================================
+No sessions recorded yet.
+
+==================================================
+EXAM ATTEMPTS
+==================================================
+No exam attempts yet.
+
+==================================================
+DOMAIN TRACKER
+==================================================
+Domain 1 - Mobile Devices (15%):     -- / -- (awaiting baseline)
+Domain 2 - Networking (20%):         -- / -- (awaiting baseline)
+Domain 3 - Hardware (25%):           -- / -- (awaiting baseline)
+Domain 4 - Virtualization & Cloud (11%): -- / -- (awaiting baseline)
+Domain 5 - Troubleshooting (29%):    -- / -- (awaiting baseline)
+
+==================================================
+STUDY PLAN
+==================================================
+Awaiting baseline results to generate personalized study plan.
