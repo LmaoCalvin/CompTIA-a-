@@ -347,14 +347,28 @@ function BaselineReport({ results, domBreak, correct, total, pct, guessedCount, 
     txt += "\nMissed Questions:\n";
     results.filter(function(r) { return !r.correct; }).forEach(function(r) {
       var q = QUESTIONS.find(function(x) { return x.id === r.id; });
-      if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Your answer: " + q.o[r.picked] + " | Correct: " + q.o[q.c] + (r.guessed ? " [GUESSED]" : "") + "\n";
+      if (q) {
+        txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Your answer: " + q.o[r.picked] + " | Correct: " + q.o[q.c] + (r.guessed ? " [GUESSED]" : "") + "\n";
+        if (r.comment) txt += "  Note: " + r.comment + "\n";
+      }
     });
     var luckyOnes = results.filter(function(r) { return r.correct && r.guessed; });
     if (luckyOnes.length > 0) {
       txt += "\nLucky Guesses (got right but flagged):\n";
       luckyOnes.forEach(function(r) {
         var q = QUESTIONS.find(function(x) { return x.id === r.id; });
-        if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n";
+        if (q) {
+          txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n";
+          if (r.comment) txt += "  Note: " + r.comment + "\n";
+        }
+      });
+    }
+    var notedCorrect = results.filter(function(r) { return r.correct && !r.guessed && r.comment; });
+    if (notedCorrect.length > 0) {
+      txt += "\nNotes on correct answers:\n";
+      notedCorrect.forEach(function(r) {
+        var q = QUESTIONS.find(function(x) { return x.id === r.id; });
+        if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Note: " + r.comment + "\n";
       });
     }
     txt += "\n=== PASTE THIS TO CLAUDE TO SET YOUR BASELINE ===\n";
@@ -459,7 +473,7 @@ function App() {
   function next() {
     const q = qs[qi];
     const isCorrect = pick === q.c;
-    const result = { id:q.id, d:q.d, correct:isCorrect, picked:pick, guessed:guessed, comment: guessed && guessComment.trim() ? guessComment.trim() : null };
+    const result = { id:q.id, d:q.d, correct:isCorrect, picked:pick, guessed:guessed, comment: guessComment.trim() ? guessComment.trim() : null };
     const newResults = [...sessionResults, result];
     setSessionResults(newResults);
     sessionResultsRef.current = newResults;
@@ -653,23 +667,19 @@ function App() {
               )}
 
               <div style={{ marginBottom:12 }}>
-                <button onClick={function() { setGuessed(function(g) { return !g; }); }} style={{ width:"100%", padding:"10px 14px", background: guessed ? "#fbbf2415" : "transparent", border:"1px solid "+(guessed ? "#fbbf2444" : "#222"), borderRadius: guessed ? "8px 8px 0 0" : 8, color: guessed ? "#fbbf24" : "#444", fontSize:12, fontWeight:600, cursor:"pointer", transition:"all 0.15s", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                <textarea
+                  value={guessComment}
+                  onChange={function(e) { setGuessComment(e.target.value); }}
+                  placeholder="Add a note, question, or thought... (optional)"
+                  rows={2}
+                  style={{ width:"100%", background:"#0c0c0c", border:"1px solid #222", borderRadius:8, padding:"10px 12px", color:"#ccc", fontSize:12, fontFamily:"inherit", resize:"vertical", outline:"none", boxSizing:"border-box", marginBottom:8, transition:"border-color 0.15s" }}
+                  onFocus={function(e) { e.target.style.borderColor="#60a5fa66"; }}
+                  onBlur={function(e) { e.target.style.borderColor="#222"; }}
+                />
+                <button onClick={function() { setGuessed(function(g) { return !g; }); }} style={{ width:"100%", padding:"10px 14px", background: guessed ? "#fbbf2415" : "transparent", border:"1px solid "+(guessed ? "#fbbf2444" : "#222"), borderRadius:8, color: guessed ? "#fbbf24" : "#444", fontSize:12, fontWeight:600, cursor:"pointer", transition:"all 0.15s", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
                   <span style={{ fontSize:14 }}>{"\u{1F3B2}"}</span>
                   {guessed ? "Marked as guess -- won't count as known" : "I guessed -- be honest!"}
                 </button>
-                {guessed && (
-                  <div style={{ border:"1px solid #fbbf2444", borderTop:"none", borderRadius:"0 0 8px 8px", padding:"10px 12px", background:"#fbbf2408" }}>
-                    <textarea
-                      value={guessComment}
-                      onChange={function(e) { setGuessComment(e.target.value); }}
-                      placeholder="What was your reasoning? (optional)"
-                      rows={2}
-                      style={{ width:"100%", background:"#0c0c0c", border:"1px solid #333", borderRadius:6, padding:"8px 10px", color:"#ccc", fontSize:12, fontFamily:"inherit", resize:"vertical", outline:"none", boxSizing:"border-box" }}
-                      onFocus={function(e) { e.target.style.borderColor="#fbbf2466"; }}
-                      onBlur={function(e) { e.target.style.borderColor="#333"; }}
-                    />
-                  </div>
-                )}
               </div>
 
               <button onClick={next} style={{ width:"100%", padding:"14px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:14, fontWeight:700, cursor:"pointer" }}>
@@ -791,6 +801,28 @@ function App() {
               })}
             </div>
           )}
+
+          {(function() {
+            var noted = sessionResults.filter(function(r) { return r.correct && !r.guessed && r.comment; });
+            if (noted.length === 0) return null;
+            return (
+              <div style={{ marginBottom:28 }}>
+                <div style={{ fontSize:11, color:"#60a5fa", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Your Notes</div>
+                {noted.map(function(r, i) {
+                  var q = QUESTIONS.find(function(x) { return x.id === r.id; });
+                  if (!q) return null;
+                  return (
+                    <div key={i} style={{ background:"#111", border:"1px solid #60a5fa22", borderRadius:8, padding:14, marginBottom:8 }}>
+                      <div style={{ fontSize:13, fontWeight:500, color:"#ccc", marginBottom:8, lineHeight:1.5 }}>{q.q}</div>
+                      <div style={{ fontSize:12, color:"#34d399", marginBottom:8 }}>Answer: {q.o[q.c]}</div>
+                      <div style={{ fontSize:12, color:"#60a5fa", marginBottom:8, fontStyle:"italic" }}>Your note: "{r.comment}"</div>
+                      <div style={{ fontSize:12, color:"#666", lineHeight:1.6 }}>{q.ex}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
 
           {mode === "baseline" && (
             <BaselineReport results={sessionResults} domBreak={domBreak} correct={correct} total={total} pct={pct} guessedCount={guessedCount} knownCorrect={knownCorrect} knownTotal={knownTotal} realPct={realPct} />
