@@ -229,6 +229,27 @@ const DOMAINS = [
 const DOMAIN_NAMES = { 1:"Mobile Devices", 2:"Networking", 3:"Hardware", 4:"Virtualization & Cloud", 5:"Troubleshooting" };
 
 function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+
+/* Question rotation: deprioritize recently seen questions so they alternate */
+function loadRecentIds() {
+  try { const r = localStorage.getItem("comptia-recent-ids"); return r ? JSON.parse(r) : []; } catch(e) { return []; }
+}
+function saveRecentIds(ids) {
+  try { localStorage.setItem("comptia-recent-ids", JSON.stringify(ids)); } catch(e) {}
+}
+function pickRotated(pool, count) {
+  const recent = new Set(loadRecentIds());
+  const unseen = pool.filter(function(q) { return !recent.has(q.id); });
+  const seen = pool.filter(function(q) { return recent.has(q.id); });
+  /* prioritize unseen, fill remainder with seen (reshuffled) */
+  const ordered = shuffle(unseen).concat(shuffle(seen));
+  const picked = ordered.slice(0, count);
+  /* record these as recently seen (keep last 2 sessions worth) */
+  const newRecent = loadRecentIds().concat(picked.map(function(q) { return q.id; }));
+  /* cap at 2x the pool size so old ones cycle back in */
+  saveRecentIds(newRecent.slice(-Math.min(pool.length * 2, 120)));
+  return shuffle(picked);
+}
 function fmt(s) { const m=Math.floor(s/60),sec=s%60; return m+":"+String(sec).padStart(2,"0"); }
 
 const FRESH = { total:0, correct:0, guessed:0, ds:{1:{a:0,c:0,g:0},2:{a:0,c:0,g:0},3:{a:0,c:0,g:0},4:{a:0,c:0,g:0},5:{a:0,c:0,g:0}}, exams:[], sessions:[] };
@@ -437,11 +458,11 @@ function App() {
   }, [timer, ticking]);
 
   function startBaseline() {
-    /* 20Q diagnostic: 4 questions per domain, easiest-first mix */
+    /* 20Q diagnostic: 4 questions per domain, rotated to avoid repeats */
     var picked = [];
     DOMAINS.forEach(function(d) {
-      var pool = shuffle(QUESTIONS.filter(function(q) { return q.d === d.id; }));
-      picked = picked.concat(pool.slice(0, 4));
+      var pool = QUESTIONS.filter(function(q) { return q.d === d.id; });
+      picked = picked.concat(pickRotated(pool, 4));
     });
     setQs(shuffle(picked));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
@@ -451,14 +472,14 @@ function App() {
 
   function startStudy(domain) {
     const pool = domain ? QUESTIONS.filter(function(q) { return q.d === domain; }) : QUESTIONS;
-    setQs(shuffle(pool).slice(0, Math.min(pool.length, 15)));
+    setQs(pickRotated(pool, Math.min(pool.length, 15)));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("study"); setDomainFilter(domain);
     setView("quiz");
   }
 
   function startExam() {
-    setQs(shuffle(QUESTIONS).slice(0, Math.min(QUESTIONS.length, 45)));
+    setQs(pickRotated(QUESTIONS, Math.min(QUESTIONS.length, 45)));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("exam"); setDomainFilter(null);
     setTimer(45*60); setTicking(true); setView("quiz");
