@@ -216,6 +216,181 @@ ex:"RAID 5 can only survive ONE drive failure. If a second drive fails before th
 { id:60, d:5, obj:"5.7", q:"A user gets 'Destination host unreachable' when pinging the default gateway. What's the MOST likely issue?",
 o:["DNS misconfiguration","Physical layer problem (cable/NIC)","Incorrect subnet mask on remote server","Firewall blocking ICMP"], c:1,
 ex:"'Destination host unreachable' to the gateway usually means a Layer 1/2 problem -- bad cable, disconnected port, or disabled NIC. If it were DNS, ping by IP would still work. The gateway is local, so it's likely physical." },
+
+// -- ADDITIONAL DOMAIN 1: Mobile Devices --
+{ id:61, d:1, obj:"1.1", q:"A technician is replacing a laptop keyboard. What type of cable typically connects the keyboard to the motherboard?",
+o:["SATA ribbon cable","ZIF/flat flex ribbon cable","USB Type-A cable","PS/2 cable"], c:1,
+ex:"Laptop keyboards connect via a thin ZIF (zero insertion force) flat flex ribbon cable that snaps into a connector on the motherboard." },
+{ id:62, d:1, obj:"1.2", q:"A user's laptop touchscreen responds to touch but shows garbled colors. Which component is MOST likely faulty?",
+o:["Digitizer","LCD panel","Touchscreen controller","Inverter board"], c:1,
+ex:"Touch works = digitizer is fine. Garbled colors = LCD panel issue. The digitizer handles touch input; the LCD handles the visual display." },
+{ id:63, d:1, obj:"1.3", q:"Which wireless technology has a maximum range of about 10 meters and is commonly used for fitness trackers?",
+o:["NFC","Bluetooth","Wi-Fi Direct","IR (Infrared)"], c:1,
+ex:"Bluetooth has ~10m range and is the standard for wearables, fitness trackers, and wireless audio. NFC is ~4cm. IR requires line-of-sight." },
+{ id:64, d:1, obj:"1.4", q:"A company wants to prevent employees from installing unauthorized apps on corporate phones. Which feature should be configured?",
+o:["GPS tracking","App whitelisting via MDM","Bluetooth disabling","Screen lock timeout"], c:1,
+ex:"MDM app whitelisting restricts which apps can be installed, blocking unauthorized software. GPS and Bluetooth settings don't address app installation." },
+{ id:65, d:1, obj:"1.1", q:"Which laptop component converts AC power from the wall outlet to the DC voltage the laptop needs?",
+o:["Inverter board","AC adapter / power brick","DC jack","Voltage regulator module"], c:1,
+ex:"The AC adapter (power brick) converts AC from the wall to DC for the laptop. The DC jack is just the port. The inverter is for CCFL backlights (legacy)." },
+{ id:66, d:1, obj:"1.2", q:"A technician needs to add cellular capability to a laptop. Which component is needed?",
+o:["Wi-Fi antenna","Bluetooth adapter","WWAN card with SIM slot","NFC chip"], c:2,
+ex:"A WWAN (Wireless Wide Area Network) card with a SIM provides cellular data (4G/5G). Wi-Fi and Bluetooth only provide local connectivity." },
+{ id:67, d:1, obj:"1.3", q:"Which mobile connection type requires devices to be within approximately 4 cm of each other?",
+o:["Bluetooth","Wi-Fi Direct","NFC","Infrared"], c:2,
+ex:"NFC (Near Field Communication) works at ~4 cm range. Used for contactless payments (Apple Pay, Google Pay) and quick device pairing." },
+{ id:68, d:1, obj:"1.4", q:"A lost company phone contains sensitive data. What MDM feature should be used IMMEDIATELY?",
+o:["Remote wipe","GPS tracking only","Change wallpaper","Disable Bluetooth"], c:0,
+ex:"Remote wipe erases all data to prevent unauthorized access. GPS tracking helps locate it, but if sensitive data is at risk, wipe first. Data > device." },
+
+// -- ADDITIONAL DOMAIN 2: Networking --
+{ id:69, d:2, obj:"2.1", q:"Which port does SMTP use for encrypted mail submission?",
+o:["25","110","587","993"], c:2,
+ex:"Port 587 = SMTP with STARTTLS (encrypted submission). Port 25 = unencrypted SMTP relay. Port 110 = POP3. Port 993 = IMAPS." },
+{ id:70, d:2, obj:"2.1", q:"What port does LDAP use by default?",
+o:["389","636","445","3389"], c:0,
+ex:"LDAP = port 389. LDAPS (secure) = 636. SMB = 445. RDP = 3389. LDAP is used for directory services like Active Directory." },
+{ id:71, d:2, obj:"2.1", q:"Which protocol uses port 161 and is used for monitoring network devices?",
+o:["SNMP","SMTP","SIP","SSH"], c:0,
+ex:"SNMP (Simple Network Management Protocol) = port 161 (queries) and 162 (traps). Used to monitor switches, routers, servers, and other network devices." },
+{ id:72, d:2, obj:"2.2", q:"What device connects two different networks and makes forwarding decisions based on IP addresses?",
+o:["Switch","Bridge","Router","Hub"], c:2,
+ex:"Routers connect different networks using IP addresses (Layer 3). Switches use MAC addresses (Layer 2). Bridges also work at Layer 2. Hubs are Layer 1." },
+{ id:73, d:2, obj:"2.2", q:"Which device provides wireless network access and operates at Layer 2?",
+o:["Router","Firewall","Wireless access point (WAP)","Modem"], c:2,
+ex:"WAPs operate at Layer 2 (Data Link), bridging wireless clients to the wired network using MAC addresses. A wireless router combines a router + WAP + switch." },
+{ id:74, d:2, obj:"2.3", q:"Which Wi-Fi standard introduced MU-MIMO and OFDMA for handling many devices simultaneously?",
+o:["802.11n (Wi-Fi 4)","802.11ac (Wi-Fi 5)","802.11ax (Wi-Fi 6)","802.11g"], c:2,
+ex:"Wi-Fi 6 (802.11ax) introduced OFDMA and improved MU-MIMO for high-density environments. Wi-Fi 5 introduced basic MU-MIMO (downlink only)." },
+{ id:75, d:2, obj:"2.4", q:"What is the purpose of a DHCP reservation?",
+o:["Block a device from getting an IP","Always assign the same IP to a specific MAC address","Reserve IPs for DNS servers only","Limit DHCP lease time"], c:1,
+ex:"A DHCP reservation maps a MAC address to a specific IP, so that device always gets the same IP from DHCP. Useful for printers, servers, etc." },
+{ id:76, d:2, obj:"2.5", q:"Which command displays the current IP configuration on a Windows PC?",
+o:["ifconfig","ipconfig","ip addr","netstat"], c:1,
+ex:"ipconfig = Windows. ifconfig = older Linux/Mac. ip addr = modern Linux. netstat shows active connections, not IP config." },
+{ id:77, d:2, obj:"2.5", q:"Which command flushes the local DNS cache on Windows?",
+o:["ipconfig /release","ipconfig /flushdns","nslookup /clear","netsh dns flush"], c:1,
+ex:"ipconfig /flushdns clears the local DNS resolver cache. /release releases the DHCP lease. nslookup queries DNS but doesn't flush." },
+{ id:78, d:2, obj:"2.6", q:"What is the maximum number of usable host addresses in a /24 subnet?",
+o:["256","255","254","252"], c:2,
+ex:"A /24 has 256 total addresses. Subtract 2 (network address + broadcast) = 254 usable hosts. This is the most common subnet on small networks." },
+{ id:79, d:2, obj:"2.7", q:"Which network topology has all devices connected to a central device (like a switch)?",
+o:["Bus","Ring","Star","Mesh"], c:2,
+ex:"Star topology = all devices connect to a central switch/hub. Most common in modern LANs. Bus = single cable. Ring = circular. Mesh = every device connects to every other." },
+{ id:80, d:2, obj:"2.3", q:"What is the maximum speed of 802.11ac (Wi-Fi 5)?",
+o:["54 Mbps","600 Mbps","1.3 Gbps (Wave 1) / 3.5 Gbps (Wave 2)","9.6 Gbps"], c:2,
+ex:"Wi-Fi 5 (802.11ac) Wave 1 = 1.3 Gbps, Wave 2 = 3.5 Gbps. 54 Mbps = 802.11g. 600 Mbps = 802.11n. 9.6 Gbps = Wi-Fi 6." },
+{ id:81, d:2, obj:"2.6", q:"Which IPv4 address class has a default subnet mask of 255.255.0.0?",
+o:["Class A","Class B","Class C","Class D"], c:1,
+ex:"Class B = 255.255.0.0 (/16), range 128.0.0.0-191.255.255.255. Class A = 255.0.0.0. Class C = 255.255.255.0. Class D = multicast (no subnet mask)." },
+{ id:82, d:2, obj:"2.7", q:"Which cable type is MOST resistant to electromagnetic interference (EMI)?",
+o:["Cat 5e UTP","Cat 6 UTP","Coaxial","Fiber optic"], c:3,
+ex:"Fiber optic uses light, not electricity, making it completely immune to EMI. Coax has some shielding. UTP (unshielded twisted pair) is most susceptible." },
+{ id:83, d:2, obj:"2.7", q:"What is the maximum cable length for a single Cat 6 Ethernet run?",
+o:["50 meters","100 meters","150 meters","300 meters"], c:1,
+ex:"Copper Ethernet (Cat 5e/6/6a) has a max run of 100 meters (328 feet). Beyond that, use a switch/repeater or fiber optic." },
+
+// -- ADDITIONAL DOMAIN 3: Hardware --
+{ id:84, d:3, obj:"3.1", q:"How many pins does a DDR4 SODIMM (laptop) have?",
+o:["200","204","260","288"], c:2,
+ex:"DDR4 SODIMM = 260 pins. DDR3 SODIMM = 204 pins. DDR4 desktop DIMM = 288 pins. DDR3 desktop DIMM = 240 pins." },
+{ id:85, d:3, obj:"3.2", q:"Which RAID level provides mirroring with NO striping, requiring exactly 2 drives?",
+o:["RAID 0","RAID 1","RAID 5","RAID 10"], c:1,
+ex:"RAID 1 = mirroring. Data is written identically to 2 drives. If one fails, the other has a complete copy. No performance gain for writes." },
+{ id:86, d:3, obj:"3.2", q:"What does RAID 0 provide?",
+o:["Redundancy only","Striping with no redundancy","Mirroring with parity","Striping with distributed parity"], c:1,
+ex:"RAID 0 = striping across drives for speed. NO redundancy -- if any drive fails, ALL data is lost. Use only when speed matters more than data safety." },
+{ id:87, d:3, obj:"3.3", q:"Which Intel CPU socket is used by 12th and 13th gen Core processors?",
+o:["LGA 1200","LGA 1700","AM4","AM5"], c:1,
+ex:"LGA 1700 = Intel 12th/13th gen (Alder Lake/Raptor Lake). LGA 1200 = 10th/11th gen. AM4/AM5 are AMD sockets." },
+{ id:88, d:3, obj:"3.3", q:"What does the BIOS/UEFI POST process do?",
+o:["Loads the operating system","Tests hardware components before OS boot","Formats the hard drive","Configures network settings"], c:1,
+ex:"POST (Power-On Self-Test) checks CPU, RAM, video, and other hardware before handing off to the OS bootloader. Beep codes indicate POST failures." },
+{ id:89, d:3, obj:"3.4", q:"Which connector provides 12V power specifically to the CPU?",
+o:["24-pin ATX","4/8-pin EPS12V","6-pin PCIe","Molex"], c:1,
+ex:"The 4-pin or 8-pin EPS12V connector near the CPU socket provides dedicated 12V power to the CPU. The 24-pin ATX is the main board power." },
+{ id:90, d:3, obj:"3.4", q:"What wattage rating should a PSU have for a system that draws 400W?",
+o:["400W exactly","450W","500-600W","1000W+"], c:2,
+ex:"PSUs run most efficiently at 50-80% load. A 500-600W PSU at 400W load runs at ~67-80% efficiency. Exact match leaves zero headroom for spikes." },
+{ id:91, d:3, obj:"3.5", q:"Which type of printer heats thermal paper to create an image, commonly used for receipts?",
+o:["Inkjet","Laser","Thermal","Impact/dot matrix"], c:2,
+ex:"Thermal printers use heat on special thermal paper. Common for receipts, shipping labels, and barcode printing. No ink or toner needed." },
+{ id:92, d:3, obj:"3.5", q:"Which printer type can print multi-part carbon copy forms?",
+o:["Inkjet","Laser","Thermal","Impact/dot matrix"], c:3,
+ex:"Impact (dot matrix) printers physically strike the paper through a ribbon, creating pressure that transfers through carbon copies. Only type that can do multi-part forms." },
+{ id:93, d:3, obj:"3.1", q:"What happens if you install a DDR4 module in a DDR3 slot?",
+o:["It works at DDR3 speeds","It physically won't fit -- different notch positions","The system auto-detects and adjusts","It works but with errors"], c:1,
+ex:"DDR generations have differently positioned notches (keys) to prevent incorrect installation. DDR4 physically cannot fit in a DDR3 slot." },
+{ id:94, d:3, obj:"3.3", q:"Which expansion slot is typically used for sound cards and network adapters?",
+o:["PCIe x16","PCIe x1","M.2","AGP"], c:1,
+ex:"PCIe x1 is used for add-in cards like sound cards, NICs, and USB expansion. PCIe x16 is for GPUs. M.2 is for storage/wireless. AGP is legacy." },
+{ id:95, d:3, obj:"3.4", q:"What is the 80 PLUS certification for power supplies?",
+o:["Maximum wattage rating","Energy efficiency certification","Safety approval rating","Noise level rating"], c:1,
+ex:"80 PLUS certifies that a PSU is at least 80% efficient. Ratings: 80+, Bronze, Silver, Gold, Platinum, Titanium -- each more efficient." },
+{ id:96, d:3, obj:"3.2", q:"A user wants fast storage but also needs data protection with one drive of fault tolerance. Which RAID level with 3 drives?",
+o:["RAID 0","RAID 1","RAID 5","RAID 10"], c:2,
+ex:"RAID 5 with 3 drives gives striping (speed) + distributed parity (survives 1 drive failure). RAID 0 has no protection. RAID 1 only uses 2 drives. RAID 10 needs 4." },
+
+// -- ADDITIONAL DOMAIN 4: Virtualization & Cloud --
+{ id:97, d:4, obj:"4.1", q:"A company needs virtual machines in the cloud where they manage the OS but not the physical hardware. Which model?",
+o:["SaaS","PaaS","IaaS","DaaS"], c:2,
+ex:"IaaS (Infrastructure as a Service) = you get VMs, storage, networking. You manage the OS and apps. Provider manages physical hardware. Examples: AWS EC2, Azure VMs." },
+{ id:98, d:4, obj:"4.1", q:"Which cloud model combines on-premises infrastructure with public cloud services?",
+o:["Public cloud","Private cloud","Hybrid cloud","Community cloud"], c:2,
+ex:"Hybrid cloud = mix of on-premises (private) and public cloud. Data can move between them. Common for companies transitioning to cloud or with compliance needs." },
+{ id:99, d:4, obj:"4.2", q:"What is the difference between a Type 1 and Type 2 hypervisor?",
+o:["Type 1 is free, Type 2 is paid","Type 1 runs on bare metal, Type 2 runs on a host OS","Type 1 is for desktops, Type 2 is for servers","Type 1 uses more RAM"], c:1,
+ex:"Type 1 (bare-metal): runs directly on hardware (ESXi, Hyper-V). Type 2 (hosted): runs on top of an OS (VirtualBox, VMware Workstation). Type 1 is more efficient." },
+{ id:100, d:4, obj:"4.1", q:"Which cloud service provides virtual desktop environments accessible from any device?",
+o:["SaaS","PaaS","IaaS","DaaS"], c:3,
+ex:"DaaS (Desktop as a Service) provides virtual desktops in the cloud. Users access a full desktop environment from any device. Examples: Amazon WorkSpaces, Azure Virtual Desktop." },
+{ id:101, d:4, obj:"4.2", q:"What technology allows multiple virtual machines to share one physical server's resources?",
+o:["Clustering","Hypervisor","Load balancer","NAS"], c:1,
+ex:"A hypervisor manages and allocates physical resources (CPU, RAM, storage) among multiple VMs running on one physical machine." },
+{ id:102, d:4, obj:"4.1", q:"A developer needs a cloud platform to build and deploy apps without managing servers. Which model?",
+o:["SaaS","PaaS","IaaS","DaaS"], c:1,
+ex:"PaaS (Platform as a Service) provides a development platform (runtime, databases, tools). You write code; the provider handles infrastructure. Examples: Heroku, Google App Engine." },
+{ id:103, d:4, obj:"4.2", q:"What should you check in BIOS/UEFI if virtual machines fail to start with a virtualization error?",
+o:["Boot order","Secure Boot","Intel VT-x / AMD-V (hardware virtualization)","TPM module"], c:2,
+ex:"Hardware virtualization (VT-x or AMD-V) must be enabled in BIOS/UEFI for VMs to run. It's sometimes disabled by default on consumer PCs." },
+
+// -- ADDITIONAL DOMAIN 5: Troubleshooting --
+{ id:104, d:5, obj:"5.2", q:"A PC displays 'No boot device found.' What should the tech check FIRST?",
+o:["Replace the hard drive","Check BIOS boot order and drive connections","Reinstall the OS","Update BIOS firmware"], c:1,
+ex:"Check if the boot drive is detected in BIOS and that boot order is correct. A loose SATA/power cable is a common cause. Reinstalling OS is a last resort." },
+{ id:105, d:5, obj:"5.2", q:"A system randomly reboots under heavy load. What is the MOST likely cause?",
+o:["Failing hard drive","Overheating or inadequate PSU","Bad network card","Outdated drivers"], c:1,
+ex:"Random reboots under load = thermal shutdown (CPU/GPU overheating) or PSU can't deliver enough power. Check temps and PSU wattage." },
+{ id:106, d:5, obj:"5.3", q:"An SSD is detected in BIOS but shows as 'uninitialized' in Disk Management. What needs to happen?",
+o:["Replace the SSD","Initialize and partition the drive","Update SATA drivers","Flash SSD firmware"], c:1,
+ex:"New drives appear as uninitialized. Open Disk Management, initialize the disk (GPT for UEFI, MBR for legacy BIOS), then create partitions and format." },
+{ id:107, d:5, obj:"5.4", q:"A monitor displays 'No Signal' when connected. Display works with another PC. What to check FIRST?",
+o:["Replace the monitor","Check/reseat the video cable and verify correct input source","Replace the GPU","Update monitor firmware"], c:1,
+ex:"'No Signal' with a known-good monitor = check cable connection and ensure monitor input matches the port used (HDMI, DP, etc.). Try a different cable." },
+{ id:108, d:5, obj:"5.5", q:"A smartphone's touchscreen is unresponsive in one area but works everywhere else. What's the likely cause?",
+o:["Software glitch","Damaged digitizer","Bad LCD panel","Low battery"], c:1,
+ex:"Partial touch failure = damaged digitizer. The digitizer is a separate layer from the LCD that detects touch input. Physical damage causes dead zones." },
+{ id:109, d:5, obj:"5.6", q:"A laser printer repeatedly jams in the same spot. Which component MOST likely needs replacement?",
+o:["Toner cartridge","Pickup rollers","Fuser assembly","Imaging drum"], c:1,
+ex:"Repeated jams in the same spot = worn pickup rollers can't grip paper properly, or separation pads are worn. These are the most common jam-causing parts." },
+{ id:110, d:5, obj:"5.7", q:"Users can access internal websites but not external websites. What is MOST likely the issue?",
+o:["Local DNS is down","Default gateway or internet connection is down","DHCP is not working","All switches are offline"], c:1,
+ex:"Internal access works = LAN is fine, DNS resolves internal names. External fails = gateway/router issue or ISP outage. If switches were down, nothing would work." },
+{ id:111, d:5, obj:"5.2", q:"A computer turns on but displays a blinking cursor on a black screen. What does this indicate?",
+o:["RAM failure","No bootable OS found","GPU failure","PSU failing"], c:1,
+ex:"Blinking cursor = POST passed but no bootable OS found on the configured boot devices. Check boot order, or the OS boot sector may be corrupted." },
+{ id:112, d:5, obj:"5.7", q:"A user's wired connection shows 'Limited Connectivity.' What should the tech try FIRST?",
+o:["Replace the NIC","Run ipconfig /release then ipconfig /renew","Replace the switch","Reinstall Windows"], c:1,
+ex:"'Limited Connectivity' usually means the PC can't get a proper IP from DHCP. Release/renew forces a new DHCP request. Check for APIPA (169.254.x.x) address." },
+{ id:113, d:5, obj:"5.3", q:"A hard drive shows S.M.A.R.T. warnings. What should the tech do?",
+o:["Ignore it -- S.M.A.R.T. is unreliable","Back up data immediately and plan drive replacement","Defragment the drive","Run chkdsk to fix it"], c:1,
+ex:"S.M.A.R.T. warnings indicate imminent drive failure. Back up all data ASAP and replace the drive. S.M.A.R.T. doesn't always catch failures, but when it warns, listen." },
+{ id:114, d:5, obj:"5.1", q:"After identifying a problem and establishing a theory, what is the NEXT step in CompTIA's troubleshooting methodology?",
+o:["Document findings","Test the theory to determine cause","Establish a plan of action","Implement the solution"], c:1,
+ex:"The order is: Identify > Theory > TEST the theory > Plan > Implement > Verify > Document. Testing the theory confirms or disproves your hypothesis before acting." },
+{ id:115, d:5, obj:"5.6", q:"An inkjet printer prints with wrong colors. After replacing ink cartridges, what should be done NEXT?",
+o:["Replace the print head","Run print head alignment","Replace the printer","Clean the paper path"], c:1,
+ex:"After installing new cartridges, run head alignment to ensure colors print in the correct positions. Misaligned heads cause color shifts and blurry output." },
 ];
 
 const DOMAINS = [
@@ -229,6 +404,27 @@ const DOMAINS = [
 const DOMAIN_NAMES = { 1:"Mobile Devices", 2:"Networking", 3:"Hardware", 4:"Virtualization & Cloud", 5:"Troubleshooting" };
 
 function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+
+/* Question rotation: deprioritize recently seen questions so they alternate */
+function loadRecentIds() {
+  try { const r = localStorage.getItem("comptia-recent-ids"); return r ? JSON.parse(r) : []; } catch(e) { return []; }
+}
+function saveRecentIds(ids) {
+  try { localStorage.setItem("comptia-recent-ids", JSON.stringify(ids)); } catch(e) {}
+}
+function pickRotated(pool, count) {
+  const recent = new Set(loadRecentIds());
+  const unseen = pool.filter(function(q) { return !recent.has(q.id); });
+  const seen = pool.filter(function(q) { return recent.has(q.id); });
+  /* prioritize unseen, fill remainder with seen (reshuffled) */
+  const ordered = shuffle(unseen).concat(shuffle(seen));
+  const picked = ordered.slice(0, count);
+  /* record these as recently seen (keep last 2 sessions worth) */
+  const newRecent = loadRecentIds().concat(picked.map(function(q) { return q.id; }));
+  /* cap at 2x the pool size so old ones cycle back in */
+  saveRecentIds(newRecent.slice(-Math.min(pool.length * 2, 120)));
+  return shuffle(picked);
+}
 function fmt(s) { const m=Math.floor(s/60),sec=s%60; return m+":"+String(sec).padStart(2,"0"); }
 
 const FRESH = { total:0, correct:0, guessed:0, ds:{1:{a:0,c:0,g:0},2:{a:0,c:0,g:0},3:{a:0,c:0,g:0},4:{a:0,c:0,g:0},5:{a:0,c:0,g:0}}, exams:[], sessions:[] };
@@ -437,11 +633,11 @@ function App() {
   }, [timer, ticking]);
 
   function startBaseline() {
-    /* 20Q diagnostic: 4 questions per domain, easiest-first mix */
+    /* 20Q diagnostic: 4 questions per domain, rotated to avoid repeats */
     var picked = [];
     DOMAINS.forEach(function(d) {
-      var pool = shuffle(QUESTIONS.filter(function(q) { return q.d === d.id; }));
-      picked = picked.concat(pool.slice(0, 4));
+      var pool = QUESTIONS.filter(function(q) { return q.d === d.id; });
+      picked = picked.concat(pickRotated(pool, 4));
     });
     setQs(shuffle(picked));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
@@ -451,17 +647,17 @@ function App() {
 
   function startStudy(domain) {
     const pool = domain ? QUESTIONS.filter(function(q) { return q.d === domain; }) : QUESTIONS;
-    setQs(shuffle(pool).slice(0, Math.min(pool.length, 15)));
+    setQs(pickRotated(pool, Math.min(pool.length, 15)));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("study"); setDomainFilter(domain);
     setView("quiz");
   }
 
   function startExam() {
-    setQs(shuffle(QUESTIONS).slice(0, Math.min(QUESTIONS.length, 45)));
+    setQs(pickRotated(QUESTIONS, Math.min(QUESTIONS.length, 60)));
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("exam"); setDomainFilter(null);
-    setTimer(45*60); setTicking(true); setView("quiz");
+    setTimer(60*60); setTicking(true); setView("quiz");
   }
 
   function answer(i) {
@@ -535,7 +731,7 @@ function App() {
           <div style={{ borderBottom:"1px solid #222", paddingBottom:20, marginBottom:24 }}>
             <div style={{ color:"#555", fontSize:11, letterSpacing:3, textTransform:"uppercase", marginBottom:6 }}>CompTIA A+ 220-1101</div>
             <div style={{ fontSize:26, fontWeight:700, color:"#e5e5e5", letterSpacing:-0.5 }}>Core 1 Study Hub</div>
-            <div style={{ color:"#555", fontSize:12, marginTop:6 }}>60 questions &middot; 5 domains &middot; persistent tracking</div>
+            <div style={{ color:"#555", fontSize:12, marginTop:6 }}>120 questions &middot; 5 domains &middot; persistent tracking</div>
           </div>
 
           {prog.total > 0 && (
@@ -570,7 +766,7 @@ function App() {
 
           <button onClick={startExam} style={{ width:"100%", padding:"18px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:20, letterSpacing:0.3, transition:"background 0.15s" }}
             onMouseOver={function(e){e.currentTarget.style.background="#fff";}} onMouseOut={function(e){e.currentTarget.style.background="#e5e5e5";}}>
-            PRACTICE EXAM &mdash; 45 questions, 45 min
+            PRACTICE EXAM &mdash; 60 questions, 60 min
           </button>
 
           <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:12 }}>Study by Domain</div>
