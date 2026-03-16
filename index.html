@@ -391,6 +391,271 @@ ex:"The order is: Identify > Theory > TEST the theory > Plan > Implement > Verif
 { id:115, d:5, obj:"5.6", q:"An inkjet printer prints with wrong colors. After replacing ink cartridges, what should be done NEXT?",
 o:["Replace the print head","Run print head alignment","Replace the printer","Clean the paper path"], c:1,
 ex:"After installing new cartridges, run head alignment to ensure colors print in the correct positions. Misaligned heads cause color shifts and blurry output." },
+
+// -- BATCH 2: DOMAIN 1 - Mobile Devices (14 more) --
+{ id:116, d:1, obj:"1.1", q:"Which laptop component allows the lid to open and close while maintaining electrical connections to the display?",
+o:["Display bezel","Hinge assembly with antenna cables","LCD inverter","GPU bracket"], c:1,
+ex:"The hinge assembly allows the lid to pivot. Antenna wires and display cables are routed through the hinge to connect the display and Wi-Fi antennas to the motherboard." },
+{ id:117, d:1, obj:"1.1", q:"A laptop user reports the built-in webcam is not detected. What should the tech check FIRST?",
+o:["Replace the display assembly","Check if the webcam is disabled in BIOS/UEFI","Install a USB webcam","Update the GPU driver"], c:1,
+ex:"Many laptops allow disabling the webcam in BIOS/UEFI settings. Check there first before assuming hardware failure. Privacy switches can also disable it." },
+{ id:118, d:1, obj:"1.2", q:"Which display connector carries both video and audio and is commonly found on modern laptops?",
+o:["VGA","DVI-D","HDMI","S-Video"], c:2,
+ex:"HDMI carries both digital video and audio. VGA is analog video only. DVI-D is digital video only. S-Video is legacy analog." },
+{ id:119, d:1, obj:"1.2", q:"A laptop screen flickers intermittently. The external monitor works fine. Which component is MOST likely the cause?",
+o:["GPU","Display cable (ribbon cable)","RAM","System board"], c:1,
+ex:"Intermittent flickering with a working external display points to the internal display cable. Movement of the lid can cause a loose ribbon cable to flicker." },
+{ id:120, d:1, obj:"1.3", q:"Which wireless standard is used for contactless payment systems like Apple Pay?",
+o:["Bluetooth 5.0","Wi-Fi Direct","NFC","Zigbee"], c:2,
+ex:"NFC (Near Field Communication) is the standard for contactless payments. It works at ~4 cm range, making it secure for tap-to-pay transactions." },
+{ id:121, d:1, obj:"1.3", q:"A user wants to share a large file between two phones without using cellular data or Wi-Fi infrastructure. Which technology?",
+o:["NFC","Bluetooth","Wi-Fi Direct","Cellular hotspot"], c:2,
+ex:"Wi-Fi Direct allows peer-to-peer connections at Wi-Fi speeds without needing a wireless router. Bluetooth works but is much slower for large files. NFC is too slow." },
+{ id:122, d:1, obj:"1.4", q:"An employee's phone has been jailbroken. Why is this a security concern for the company?",
+o:["It voids the warranty only","It bypasses OS security controls, allowing unauthorized apps and malware","It uses more battery","It disables Bluetooth"], c:1,
+ex:"Jailbreaking removes OS restrictions, bypassing sandboxing and security controls. This allows sideloading of unvetted apps and increases malware risk." },
+{ id:123, d:1, obj:"1.4", q:"Which mobile email protocol synchronizes mail, contacts, and calendar in real time?",
+o:["POP3","IMAP","Exchange ActiveSync","SMTP"], c:2,
+ex:"Exchange ActiveSync provides real-time push sync for email, contacts, and calendars. IMAP syncs email only. POP3 downloads and optionally deletes. SMTP sends only." },
+{ id:124, d:1, obj:"1.1", q:"A technician needs to replace a laptop battery but the case has no removable battery latch. What does this mean?",
+o:["The battery cannot be replaced","The battery is internal -- the case must be opened","The laptop uses AC power only","A BIOS update is needed"], c:1,
+ex:"Many modern laptops have internal (non-removable) batteries. The back panel must be removed to access and replace the battery. This is increasingly common." },
+{ id:125, d:1, obj:"1.2", q:"What is the purpose of the digitizer in a touchscreen laptop?",
+o:["Converts analog signals to digital video","Detects touch input location on the screen","Controls screen brightness","Manages display resolution"], c:1,
+ex:"The digitizer is a transparent layer over the LCD that senses touch position. It converts physical touch into coordinates the OS can process." },
+{ id:126, d:1, obj:"1.4", q:"A company wants to separate personal and corporate data on employee-owned phones. Which MDM feature is used?",
+o:["Remote wipe","Containerization","GPS tracking","Bluetooth management"], c:1,
+ex:"Containerization creates a separate encrypted workspace on the device for corporate data. Personal data stays separate. If the employee leaves, only the container is wiped." },
+{ id:127, d:1, obj:"1.3", q:"What is the typical maximum data rate of Bluetooth 5.0?",
+o:["1 Mbps","2 Mbps","54 Mbps","300 Mbps"], c:1,
+ex:"Bluetooth 5.0 supports up to 2 Mbps (double Bluetooth 4.x). This is fast enough for audio and wearables but much slower than Wi-Fi for file transfers." },
+{ id:128, d:1, obj:"1.4", q:"A smartphone app requests permission to access the camera, microphone, contacts, and SMS. The app is a flashlight. What should the user do?",
+o:["Grant all permissions","Deny unnecessary permissions -- a flashlight doesn't need contacts or SMS","Uninstall the phone's OS","Disable the camera permanently"], c:1,
+ex:"Excessive permissions are a red flag for malware or data harvesting. A flashlight only needs camera (for the LED). Deny contacts, SMS, and microphone access." },
+{ id:129, d:1, obj:"1.1", q:"Which component in a laptop converts DC power back to higher voltage AC to power CCFL backlights?",
+o:["AC adapter","Inverter board","DC jack","Voltage regulator"], c:1,
+ex:"The inverter converts DC to AC for CCFL (Cold Cathode Fluorescent Lamp) backlights. Modern LED-backlit displays don't need an inverter." },
+
+// -- BATCH 2: DOMAIN 2 - Networking (7 more) --
+{ id:130, d:2, obj:"2.2", q:"What is the primary function of a managed switch compared to an unmanaged switch?",
+o:["Faster port speeds","VLAN support and remote configuration","Wireless capability","Built-in firewall"], c:1,
+ex:"Managed switches support VLANs, port mirroring, SNMP monitoring, QoS, and remote management. Unmanaged switches are plug-and-play with no configuration options." },
+{ id:131, d:2, obj:"2.3", q:"Which frequency band was introduced with Wi-Fi 6E?",
+o:["2.4 GHz","5 GHz","6 GHz","60 GHz"], c:2,
+ex:"Wi-Fi 6E extends Wi-Fi 6 into the 6 GHz band, providing more channels and less congestion. 60 GHz is WiGig (802.11ad)." },
+{ id:132, d:2, obj:"2.4", q:"What does a DHCP scope define?",
+o:["DNS server addresses","The range of IP addresses available for assignment","Firewall rules","VLAN membership"], c:1,
+ex:"A DHCP scope defines the pool of IP addresses that DHCP can assign to clients. It includes start/end range, subnet mask, lease duration, and exclusions." },
+{ id:133, d:2, obj:"2.6", q:"Which IPv4 address range is reserved for loopback testing?",
+o:["10.0.0.0/8","169.254.0.0/16","127.0.0.0/8","192.168.0.0/16"], c:2,
+ex:"127.0.0.0/8 is the loopback range. 127.0.0.1 is most common -- used to test the local TCP/IP stack. 169.254.x.x is APIPA. The others are private ranges." },
+{ id:134, d:2, obj:"2.5", q:"Which command shows all active network connections and listening ports on Windows?",
+o:["ipconfig /all","netstat -an","ping localhost","tracert 127.0.0.1"], c:1,
+ex:"netstat -an shows all connections and listening ports in numeric format. -a = all connections, -n = numeric (no DNS resolution). Useful for finding open ports." },
+{ id:135, d:2, obj:"2.7", q:"What type of connector is used on the end of a standard Ethernet patch cable?",
+o:["RJ-11","RJ-45","BNC","LC"], c:1,
+ex:"RJ-45 is the standard Ethernet connector (8 pins). RJ-11 is for phone lines (6 pins). BNC is for coaxial. LC is a fiber optic connector." },
+{ id:136, d:2, obj:"2.2", q:"Which device provides Network Address Translation to allow multiple internal devices to share one public IP?",
+o:["Switch","Hub","Router (with NAT)","Access point"], c:2,
+ex:"Routers with NAT translate private IPs to a single public IP for internet access. Switches and hubs operate at Layer 2 and don't do address translation." },
+
+// -- BATCH 2: DOMAIN 3 - Hardware (22 more) --
+{ id:137, d:3, obj:"3.1", q:"What type of RAM is used in most modern desktop computers?",
+o:["DDR3 SODIMM","DDR4 or DDR5 DIMM","SDRAM","RDRAM"], c:1,
+ex:"DDR4 and DDR5 DIMMs are the current desktop standard. SODIMMs are for laptops. SDRAM and RDRAM are legacy technologies no longer in production." },
+{ id:138, d:3, obj:"3.1", q:"What is the purpose of XMP (Extreme Memory Profile)?",
+o:["Overclocking RAM beyond rated speeds with preconfigured profiles","Adding error correction to non-ECC RAM","Converting DDR4 to DDR5","Enabling dual-channel mode"], c:0,
+ex:"XMP is an Intel specification (AMD has EXPO) that stores tested overclock profiles in the RAM's SPD chip. Enable in BIOS to run RAM at its advertised speed above JEDEC defaults." },
+{ id:139, d:3, obj:"3.2", q:"What does the TRIM command do for SSDs?",
+o:["Defragments the SSD","Tells the SSD which blocks are no longer in use so it can optimize writes","Encrypts stored data","Increases SSD cache size"], c:1,
+ex:"TRIM informs the SSD controller which data blocks are no longer needed. This allows the SSD to perform garbage collection efficiently, maintaining write performance over time." },
+{ id:140, d:3, obj:"3.2", q:"What is the maximum theoretical transfer speed of SATA III?",
+o:["1.5 Gbps","3.0 Gbps","6.0 Gbps","10 Gbps"], c:2,
+ex:"SATA III (SATA 6Gb/s) has a maximum of 6.0 Gbps (~550 MB/s real-world). SATA I = 1.5 Gbps, SATA II = 3.0 Gbps." },
+{ id:141, d:3, obj:"3.3", q:"What is the purpose of the CMOS battery on a motherboard?",
+o:["Powers the CPU during sleep","Maintains BIOS/UEFI settings and system clock when powered off","Charges the laptop battery","Provides backup power to RAM"], c:1,
+ex:"The CMOS battery (usually CR2032) keeps BIOS settings and the real-time clock running when the PC is unplugged. A dead battery resets BIOS to defaults." },
+{ id:142, d:3, obj:"3.3", q:"A user reports the system clock resets to a wrong date every time the PC is unplugged. What needs replacement?",
+o:["Power supply","CMOS battery (CR2032)","System board","CPU"], c:1,
+ex:"The CMOS battery maintains the real-time clock and BIOS settings. When it dies, the clock resets and BIOS settings may revert to defaults on power loss." },
+{ id:143, d:3, obj:"3.4", q:"What is the difference between modular and non-modular power supplies?",
+o:["Modular PSUs are more powerful","Modular PSUs have detachable cables for cleaner builds","Non-modular PSUs are more efficient","Modular PSUs don't need cooling fans"], c:1,
+ex:"Modular PSUs let you attach only the cables you need, reducing clutter and improving airflow. Non-modular have all cables permanently attached." },
+{ id:144, d:3, obj:"3.5", q:"What type of printer uses a heated wax-based ribbon to produce durable, weather-resistant labels?",
+o:["Laser","Inkjet","Thermal transfer","Impact"], c:2,
+ex:"Thermal transfer printers melt wax or resin from a ribbon onto labels. Unlike direct thermal, the prints are durable and resistant to heat, light, and moisture." },
+{ id:145, d:3, obj:"3.3", q:"Which front panel connector must be connected for the PC to turn on when the power button is pressed?",
+o:["HDD LED","Power LED","Power switch (PWR_SW)","Reset switch"], c:2,
+ex:"The power switch (PWR_SW) connector must be connected to the motherboard's front panel header. Without it, pressing the case power button does nothing." },
+{ id:146, d:3, obj:"3.1", q:"A technician needs to identify the RAM speed. Where can this information be found?",
+o:["On the SATA cable","In CPU-Z or the BIOS/UEFI setup","On the power supply label","In Device Manager under Display Adapters"], c:1,
+ex:"RAM speed (e.g., DDR4-3200) is shown in BIOS/UEFI or tools like CPU-Z. The physical module label also shows it. Device Manager doesn't display memory speeds." },
+{ id:147, d:3, obj:"3.2", q:"What is a hot-swappable drive bay used for?",
+o:["Overclocking the drive","Replacing drives without shutting down the system","Converting internal drives to external","Increasing drive speed"], c:1,
+ex:"Hot-swap bays let you insert/remove drives while the system is running. Common in servers and NAS devices for replacing failed RAID drives without downtime." },
+{ id:148, d:3, obj:"3.3", q:"What does TPM (Trusted Platform Module) provide?",
+o:["Additional RAM","Hardware-based encryption and secure key storage","Wi-Fi connectivity","Extra USB ports"], c:1,
+ex:"TPM is a security chip that stores encryption keys, certificates, and passwords in hardware. Required for Windows 11 and used by BitLocker for drive encryption." },
+{ id:149, d:3, obj:"3.4", q:"A new GPU needs a 6-pin + 8-pin power connector. The PSU only has 6-pin PCIe connectors. What adapter might work temporarily?",
+o:["SATA to 8-pin","Molex to 6-pin PCIe (use existing 6-pin + adapter for second)","No adapter -- replace the PSU","USB to PCIe"], c:2,
+ex:"While a PSU replacement is the proper fix, some 6+2 pin PCIe cables can serve as 8-pin. Using Molex or SATA adapters for GPU power is risky and not recommended." },
+{ id:150, d:3, obj:"3.5", q:"Which component in a laser printer applies heat and pressure to bond toner to paper?",
+o:["Transfer roller","Imaging drum","Fuser assembly","Pickup roller"], c:2,
+ex:"The fuser assembly uses heated rollers to melt and press toner into the paper fibers. This is why freshly printed laser pages are warm." },
+{ id:151, d:3, obj:"3.5", q:"An office needs a printer that can handle high-volume printing with low cost per page. Which type is BEST?",
+o:["Inkjet","Laser","Thermal","Dot matrix"], c:1,
+ex:"Laser printers excel at high-volume printing with low cost per page. Toner cartridges last thousands of pages. Inkjet has higher per-page cost." },
+{ id:152, d:3, obj:"3.3", q:"What happens if a CPU is installed without thermal paste?",
+o:["The CPU won't be detected","The CPU will overheat and may throttle or shut down","Nothing -- thermal paste is optional","The motherboard will short circuit"], c:1,
+ex:"Thermal paste fills microscopic gaps between the CPU and heatsink for efficient heat transfer. Without it, the CPU overheats rapidly and triggers thermal protection." },
+{ id:153, d:3, obj:"3.4", q:"What does the +12V rail on a PSU primarily power?",
+o:["USB ports only","CPU and GPU","Case fans only","LEDs and front panel"], c:1,
+ex:"The +12V rail provides power to the CPU (via EPS connector) and GPU (via PCIe connectors). These are the highest power-draw components. +5V and +3.3V power other components." },
+{ id:154, d:3, obj:"3.2", q:"Which interface connects an M.2 SSD using the PCIe bus for maximum speed?",
+o:["SATA","AHCI","NVMe","IDE"], c:2,
+ex:"NVMe (Non-Volatile Memory Express) is a protocol designed for SSDs using PCIe lanes. It's much faster than AHCI, which was designed for spinning drives." },
+{ id:155, d:3, obj:"3.1", q:"What is the maximum amount of RAM a 32-bit operating system can address?",
+o:["2 GB","4 GB","8 GB","16 GB"], c:1,
+ex:"32-bit OSes can address 2^32 bytes = 4 GB maximum (often ~3.5 GB usable). For more than 4 GB, a 64-bit OS is required." },
+{ id:156, d:3, obj:"3.3", q:"Which BIOS/UEFI setting must be enabled to boot from a USB drive?",
+o:["Secure Boot","USB boot / Boot from USB in boot priority","VT-x","TPM"], c:1,
+ex:"The USB drive must be in the boot order/priority list, and USB boot must be enabled. Secure Boot may also need to be disabled for unsigned boot media." },
+{ id:157, d:3, obj:"3.5", q:"What causes ghost images (repeated faint copies) on laser printer output?",
+o:["Low toner","Worn imaging drum not fully cleaning","Bad paper quality","Clogged fuser"], c:1,
+ex:"Ghost images occur when the imaging drum doesn't fully clean between rotations, leaving a faint residue of the previous image. Replace the drum unit." },
+{ id:158, d:3, obj:"3.4", q:"What tool should be used to test if a PSU is providing correct voltages?",
+o:["Multimeter","Cable tester","Tone probe","Wi-Fi analyzer"], c:0,
+ex:"A multimeter measures DC voltage on PSU connectors. Check +3.3V, +5V, and +12V rails. PSU testers also exist but a multimeter is more precise." },
+
+// -- BATCH 2: DOMAIN 4 - Virtualization & Cloud (9 more) --
+{ id:159, d:4, obj:"4.1", q:"Which cloud concept means you only pay for the resources you actually use?",
+o:["Rapid elasticity","Measured service / metered billing","Resource pooling","On-demand self-service"], c:1,
+ex:"Measured service means cloud resources are metered and billed based on actual usage (CPU hours, storage GB, bandwidth). You pay for what you consume." },
+{ id:160, d:4, obj:"4.1", q:"A company uses AWS for its web servers and a private data center for sensitive databases. Which deployment model?",
+o:["Public cloud","Private cloud","Hybrid cloud","Community cloud"], c:2,
+ex:"Hybrid cloud combines public cloud services (AWS) with private infrastructure (on-premises data center). Common for companies with compliance requirements." },
+{ id:161, d:4, obj:"4.2", q:"What is the purpose of a virtual switch in a hypervisor?",
+o:["Connects physical network cables","Provides network connectivity between VMs and to physical networks","Increases internet speed","Manages storage volumes"], c:1,
+ex:"A virtual switch works like a physical switch but in software. It connects VMs to each other and to physical networks through the host's NIC." },
+{ id:162, d:4, obj:"4.2", q:"A VM is running slowly. The host shows 95% RAM utilization. What is the MOST likely fix?",
+o:["Add more virtual CPU cores","Add more physical RAM to the host or reduce VM memory allocation","Increase disk space","Update the VM's OS"], c:1,
+ex:"High host RAM usage means the hypervisor is overcommitting memory. Add physical RAM to the host, reduce VM memory allocations, or migrate VMs to another host." },
+{ id:163, d:4, obj:"4.1", q:"What is a key advantage of cloud computing's resource pooling?",
+o:["Each user gets dedicated hardware","Multiple tenants share physical resources efficiently","Data is never shared between regions","Backups are automatic"], c:1,
+ex:"Resource pooling lets providers serve multiple customers (tenants) from shared physical resources. This improves efficiency and reduces costs through economies of scale." },
+{ id:164, d:4, obj:"4.2", q:"What file represents a VM's hard drive in most hypervisors?",
+o:["ISO file","Virtual disk file (VMDK, VHD, VHDX)","Snapshot file","Configuration file"], c:1,
+ex:"Virtual disk files (VMDK for VMware, VHD/VHDX for Hyper-V, QCOW2 for KVM) store the VM's hard drive contents. ISO files are disc images for installation." },
+{ id:165, d:4, obj:"4.1", q:"A university and a hospital share cloud infrastructure to collaborate on research while meeting HIPAA requirements. Which model?",
+o:["Public cloud","Private cloud","Hybrid cloud","Community cloud"], c:3,
+ex:"Community cloud is shared by organizations with common requirements (compliance, security, or mission). It's managed by one or more of the orgs or a third party." },
+{ id:166, d:4, obj:"4.2", q:"What feature allows a VM to be moved from one physical host to another with zero downtime?",
+o:["Snapshotting","Live migration (vMotion)","Cloning","Checkpointing"], c:1,
+ex:"Live migration (VMware vMotion, Hyper-V Live Migration) moves a running VM between hosts without downtime. The VM's memory state is transferred seamlessly." },
+{ id:167, d:4, obj:"4.1", q:"Which cloud characteristic allows a user to provision resources without needing to contact the provider?",
+o:["Rapid elasticity","Measured service","On-demand self-service","Broad network access"], c:2,
+ex:"On-demand self-service means users can provision compute, storage, or other resources automatically through a web portal without requiring human interaction from the provider." },
+
+// -- BATCH 2: DOMAIN 5 - Troubleshooting (33 more) --
+{ id:168, d:5, obj:"5.1", q:"A technician replaced a failed component and the system works. What should they do NEXT per CompTIA methodology?",
+o:["Document findings","Verify full system functionality and implement preventive measures","Close the ticket immediately","Ask the user to test it themselves"], c:1,
+ex:"After implementing a fix: verify that the entire system works (not just the fixed part) and put preventive measures in place. Documentation comes last." },
+{ id:169, d:5, obj:"5.2", q:"A desktop PC makes a loud grinding noise during operation. Which component is MOST likely the cause?",
+o:["RAM module","Case or CPU fan bearing failure","SSD","Motherboard capacitor"], c:1,
+ex:"Grinding noises = mechanical component. Fans with worn bearings are the most common source. SSDs and RAM have no moving parts. Replace the failing fan." },
+{ id:170, d:5, obj:"5.2", q:"A computer shuts down unexpectedly during demanding tasks like gaming. Temps are normal. MOST likely cause?",
+o:["Faulty RAM","Insufficient PSU wattage","Bad monitor","Outdated browser"], c:1,
+ex:"Normal temps rule out overheating. Under heavy load, the GPU and CPU draw peak power. If the PSU can't supply enough wattage, it triggers a safety shutdown." },
+{ id:171, d:5, obj:"5.3", q:"A user hears a repetitive clicking from the hard drive and files are becoming inaccessible. What should be done FIRST?",
+o:["Run defrag","Back up accessible data immediately","Run chkdsk /r","Format and reinstall"], c:1,
+ex:"The 'click of death' means the drive's read/write heads are failing. Priority is saving data before the drive completely fails. Defrag or chkdsk may cause further damage." },
+{ id:172, d:5, obj:"5.4", q:"A monitor displays 'Input Not Supported.' What does this typically mean?",
+o:["The cable is bad","The resolution or refresh rate exceeds the monitor's capability","The monitor is failing","The GPU is overheating"], c:1,
+ex:"'Input Not Supported' means the signal (resolution/refresh rate) from the PC exceeds what the monitor can display. Boot to Safe Mode to change display settings." },
+{ id:173, d:5, obj:"5.5", q:"A smartphone GPS is inaccurate indoors. Which setting can improve location accuracy?",
+o:["Airplane mode","Enable Wi-Fi and Bluetooth scanning for assisted location","Disable all radios","Factory reset"], c:1,
+ex:"GPS struggles indoors. Wi-Fi positioning and Bluetooth beacons supplement GPS for indoor accuracy. Most phones use all three for best location estimates." },
+{ id:174, d:5, obj:"5.6", q:"A laser printer produces pages with vertical black lines down the page. MOST likely cause?",
+o:["Low toner","Scratch or debris on the imaging drum","Fuser failure","Wrong paper type"], c:1,
+ex:"Vertical black lines = a scratch, groove, or stuck debris on the imaging drum (or photoconductor). The damage prints a continuous line with each rotation." },
+{ id:175, d:5, obj:"5.7", q:"A wireless user can connect to the company Wi-Fi but cannot access the internet. Other wireless users are fine. What should be checked FIRST?",
+o:["The wireless access point","The user's proxy or DNS settings","The internet connection","The DHCP server"], c:1,
+ex:"Other users work = AP, internet, and DHCP are fine. Check the individual user's proxy settings, DNS config, or if their device has a VPN or firewall interfering." },
+{ id:176, d:5, obj:"5.2", q:"After a power outage, a PC won't boot and smells like burnt electronics. What is the MOST likely failed component?",
+o:["Hard drive","Power supply (PSU)","Monitor","Keyboard"], c:1,
+ex:"Power surges during outages most commonly damage the PSU. A burnt smell from inside the case strongly suggests the PSU. Use a surge protector or UPS to prevent this." },
+{ id:177, d:5, obj:"5.3", q:"A BIOS update fails midway through and the system won't boot. What feature might recover the BIOS?",
+o:["Safe Mode","BIOS recovery mode / dual BIOS","System Restore","chkdsk"], c:1,
+ex:"Many motherboards have a BIOS recovery feature that can flash from a USB drive, or a dual BIOS chip that boots from a backup. Without these, the board may need RMA." },
+{ id:178, d:5, obj:"5.4", q:"A user reports a 'blurry' image on their LCD monitor. What setting should be checked FIRST?",
+o:["Color depth","Native resolution -- ensure the display runs at its native resolution","Contrast ratio","Response time"], c:1,
+ex:"LCDs look best at their native resolution. Running at a non-native resolution causes interpolation that makes the image look blurry or fuzzy." },
+{ id:179, d:5, obj:"5.5", q:"A tablet won't charge past 1% even when plugged in. A different cable doesn't help. MOST likely cause?",
+o:["Software update needed","Failing battery that needs replacement","Screen is too bright","Wi-Fi is draining power"], c:1,
+ex:"If different cables don't help and the charger is known good, the battery is likely degraded. Lithium batteries lose capacity over time and eventually won't hold a charge." },
+{ id:180, d:5, obj:"5.6", q:"Paper keeps jamming in a specific tray of a laser printer. What should the tech inspect?",
+o:["Toner level","Pickup rollers and separation pad in that tray","Fuser temperature","Network connection"], c:1,
+ex:"Tray-specific jams point to the pickup rollers or separation pad in that tray. Worn rollers can't grip paper properly, and worn pads let multiple sheets feed." },
+{ id:181, d:5, obj:"5.7", q:"After changing the IP address of a server, some clients can't connect to it. DNS still shows the old IP. What needs to happen?",
+o:["Reboot the clients","Update the DNS A record and flush client DNS caches","Replace the server NIC","Reinstall the server OS"], c:1,
+ex:"DNS records must be updated to reflect the new IP. Clients cache DNS lookups, so they need to flush (ipconfig /flushdns) or wait for TTL expiration." },
+{ id:182, d:5, obj:"5.2", q:"A system powers on but immediately turns off in a repeating cycle. What should the tech try FIRST?",
+o:["Update the BIOS","Disconnect all peripherals and reseat CPU/RAM","Replace the motherboard","Install a new OS"], c:1,
+ex:"Power cycling (boot loops) often indicates a hardware seating issue. Reseat RAM, CPU, and power connectors first. If that fails, test with minimal hardware." },
+{ id:183, d:5, obj:"5.3", q:"A drive letter disappears from Windows Explorer but the drive is visible in BIOS. What should be checked?",
+o:["Replace the drive","Check Disk Management -- the drive may need a letter reassigned","Run a virus scan","Update the motherboard drivers"], c:1,
+ex:"If the BIOS sees it, the hardware is fine. In Disk Management, the volume may have lost its drive letter assignment. Right-click and assign a letter." },
+{ id:184, d:5, obj:"5.7", q:"All devices on a switch lose network connectivity simultaneously. Other switches on the network still work. MOST likely cause?",
+o:["DNS failure","The switch has failed or lost power","DHCP exhaustion","A firewall rule change"], c:1,
+ex:"All devices on ONE switch losing connectivity while others work = that specific switch failed. Check power, status LEDs, and try power cycling the switch." },
+{ id:185, d:5, obj:"5.5", q:"A smartphone overheats and the battery drains rapidly. Which troubleshooting step should be performed FIRST?",
+o:["Replace the battery","Check for runaway apps in battery/resource usage settings","Factory reset","Submerge in cold water"], c:1,
+ex:"Runaway apps (stuck in loops or using excessive GPS/CPU) are the most common cause of overheating and battery drain. Check battery usage stats to identify the culprit." },
+{ id:186, d:5, obj:"5.4", q:"A second monitor connected via HDMI shows 'No Signal.' The same monitor works on another PC. What to check?",
+o:["Replace the monitor","Check display settings -- the second display may not be detected or may be set to 'PC screen only'","Replace the motherboard","Update the printer driver"], c:1,
+ex:"Check Windows display settings (Win+P) to ensure it's set to Extend or Duplicate, not 'PC screen only.' Also check the HDMI cable and try a different port." },
+{ id:187, d:5, obj:"5.1", q:"During troubleshooting, the tech's initial theory is disproven after testing. What should they do NEXT?",
+o:["Implement the original fix anyway","Establish a new theory or escalate","Document the failed theory as the solution","Skip to the last step"], c:1,
+ex:"If the theory is disproven, go back to step 2: establish a new theory. If all theories are exhausted, escalate to a higher-level technician." },
+{ id:188, d:5, obj:"5.6", q:"A network printer is offline. Users can ping its IP address. What should be checked?",
+o:["The printer's network cable","The print spooler service on the print server","The switch port speed","The router's NAT table"], c:1,
+ex:"If you can ping the printer, the network is fine. The print spooler service may have stopped, or the print queue is stuck. Restart the spooler service." },
+{ id:189, d:5, obj:"5.7", q:"A user gets 'Your connection is not private' when visiting an HTTPS website. What does this indicate?",
+o:["The website is down","The SSL/TLS certificate is expired, untrusted, or mismatched","The user's internet is too slow","The firewall is blocking HTTP"], c:1,
+ex:"Certificate warnings mean the site's SSL/TLS certificate has an issue -- expired, self-signed, wrong domain, or untrusted CA. Check system date/time too." },
+{ id:190, d:5, obj:"5.2", q:"A PC boots to a black screen with 'BOOTMGR is missing.' What is the LIKELY cause and fix?",
+o:["RAM failure -- replace RAM","Corrupted boot manager -- repair with Windows recovery environment","GPU failure -- replace GPU","PSU issue -- replace PSU"], c:1,
+ex:"'BOOTMGR is missing' means the boot manager is corrupted or the boot partition is inaccessible. Boot from Windows install media and use Startup Repair or bootrec commands." },
+{ id:191, d:5, obj:"5.3", q:"After installing a new SSD, the system doesn't recognize it. The SSD works in another computer. What to check?",
+o:["Flash the SSD firmware","Verify the M.2 slot supports NVMe (not just SATA M.2)","Replace the CPU","Update the GPU driver"], c:1,
+ex:"Some M.2 slots only support SATA M.2 drives, not NVMe (and vice versa). Check the motherboard manual for slot compatibility. Also check BIOS storage settings." },
+{ id:192, d:5, obj:"5.4", q:"A monitor displays oversaturated colors and everything has a yellowish tint. What should be done?",
+o:["Replace the GPU","Recalibrate the monitor or check Night Light/f.lux settings","Replace the power supply","Add more RAM"], c:1,
+ex:"Yellow tint is often caused by Night Light (Windows), f.lux, or incorrect color profile settings. Check display settings and disable blue light filters first." },
+{ id:193, d:5, obj:"5.5", q:"A laptop's Wi-Fi keeps disconnecting. Bluetooth devices also lose connection. Other devices work fine on the same network. MOST likely cause?",
+o:["Router firmware needs updating","The laptop's wireless card is failing","The ISP is throttling","DNS is misconfigured"], c:1,
+ex:"Both Wi-Fi and Bluetooth failing on one device (with others working fine) points to a failing wireless card, since many laptops use a combo Wi-Fi/Bluetooth module." },
+{ id:194, d:5, obj:"5.6", q:"A 3D printer produces prints with poor layer adhesion and the first layer won't stick to the bed. What to adjust?",
+o:["Increase print speed","Level the bed and adjust nozzle height/bed temperature","Replace the filament spool holder","Update printer firmware"], c:1,
+ex:"Poor first-layer adhesion is usually caused by incorrect bed leveling (nozzle too far from bed) or bed temperature too low. Level the bed and adjust Z-offset." },
+{ id:195, d:5, obj:"5.7", q:"A network is experiencing slow performance. A bandwidth test shows normal internet speed. What should be checked?",
+o:["ISP connection","Internal network switches and cabling for errors or duplex mismatches","The monitor resolution","The keyboard layout"], c:1,
+ex:"Normal internet speed but slow internal performance points to LAN issues: duplex mismatches, failing switches, bad cables, or broadcast storms." },
+{ id:196, d:5, obj:"5.1", q:"What is the LAST step in the CompTIA troubleshooting methodology?",
+o:["Verify functionality","Implement the solution","Document findings, actions, and outcomes","Establish a plan of action"], c:2,
+ex:"The 7 steps end with: Document findings, actions, and outcomes. This creates a knowledge base for future issues and provides accountability." },
+{ id:197, d:5, obj:"5.2", q:"A PC shows a blue screen (BSOD) with the error 'IRQL_NOT_LESS_OR_EQUAL.' MOST likely cause?",
+o:["Hard drive failure","Faulty RAM or incompatible driver","Monitor issue","Network card problem"], c:1,
+ex:"IRQL_NOT_LESS_OR_EQUAL usually indicates a driver trying to access memory it shouldn't. Common causes: bad RAM, incompatible drivers, or driver conflicts." },
+{ id:198, d:5, obj:"5.3", q:"A user reports that their external USB hard drive is not detected when plugged in. It works on other PCs. What to try FIRST?",
+o:["Format the drive","Try a different USB port -- the current port may be dead or underpowered","Replace the drive","Open Disk Management and delete all partitions"], c:1,
+ex:"Try another USB port first. USB ports can fail, be disabled in BIOS, or not provide enough power (especially front panel ports). Use a rear port directly on the motherboard." },
+{ id:199, d:5, obj:"5.7", q:"A VLAN change was made on a switch and now an entire department lost network access. What should the tech do FIRST?",
+o:["Replace the switch","Review and revert the VLAN configuration change","Replace all network cables","Restart the DHCP server"], c:1,
+ex:"If a VLAN change caused the outage, revert the change first to restore connectivity. Then plan and implement the correct VLAN configuration during a maintenance window." },
+{ id:200, d:5, obj:"5.5", q:"A smartphone's screen is unresponsive after being dropped but the display still shows an image. What is damaged?",
+o:["LCD panel","Digitizer (touch layer)","Battery","Motherboard"], c:1,
+ex:"Display works but touch doesn't = damaged digitizer. The digitizer is a separate layer that detects touch input. A cracked digitizer can lose touch sensitivity in areas or entirely." },
 ];
 
 const DOMAINS = [
@@ -611,6 +876,8 @@ function App() {
   const [showExp, setShowExp] = useState(false);
   const [guessed, setGuessed] = useState(false);
   const [guessComment, setGuessComment] = useState("");
+  const [optOrder, setOptOrder] = useState([0,1,2,3]);
+  const [sizePickerDomain, setSizePickerDomain] = useState(null);
   const [sessionResults, setSessionResults] = useState([]);
   const [timer, setTimer] = useState(0);
   const [ticking, setTicking] = useState(false);
@@ -632,32 +899,41 @@ function App() {
     if (timer <= 0 && ticking) { setTicking(false); finishWith(sessionResultsRef.current); }
   }, [timer, ticking]);
 
+  function initOptOrder(questionsList) {
+    if (questionsList.length > 0) {
+      setOptOrder(shuffle(questionsList[0].o.map(function(_, i) { return i; })));
+    }
+  }
+
   function startBaseline() {
-    /* 20Q diagnostic: 4 questions per domain, rotated to avoid repeats */
     var picked = [];
     DOMAINS.forEach(function(d) {
       var pool = QUESTIONS.filter(function(q) { return q.d === d.id; });
       picked = picked.concat(pickRotated(pool, 4));
     });
-    setQs(shuffle(picked));
+    var shuffled = shuffle(picked);
+    setQs(shuffled); initOptOrder(shuffled);
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("baseline"); setDomainFilter(null);
-    setView("quiz");
+    setSizePickerDomain(null); setView("quiz");
   }
 
-  function startStudy(domain) {
+  function startStudy(domain, size) {
+    var sz = size || 15;
     const pool = domain ? QUESTIONS.filter(function(q) { return q.d === domain; }) : QUESTIONS;
-    setQs(pickRotated(pool, Math.min(pool.length, 15)));
+    var picked = pickRotated(pool, Math.min(pool.length, sz));
+    setQs(picked); initOptOrder(picked);
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("study"); setDomainFilter(domain);
-    setView("quiz");
+    setSizePickerDomain(null); setView("quiz");
   }
 
   function startExam() {
-    setQs(pickRotated(QUESTIONS, Math.min(QUESTIONS.length, 60)));
+    var picked = pickRotated(QUESTIONS, Math.min(QUESTIONS.length, 60));
+    setQs(picked); initOptOrder(picked);
     setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
     setSessionResults([]); sessionResultsRef.current = []; setMode("exam"); setDomainFilter(null);
-    setTimer(60*60); setTicking(true); setView("quiz");
+    setSizePickerDomain(null); setTimer(60*60); setTicking(true); setView("quiz");
   }
 
   function answer(i) {
@@ -668,14 +944,18 @@ function App() {
 
   function next() {
     const q = qs[qi];
-    const isCorrect = pick === q.c;
-    const result = { id:q.id, d:q.d, correct:isCorrect, picked:pick, guessed:guessed, comment: guessComment.trim() ? guessComment.trim() : null };
+    const isCorrect = optOrder[pick] === q.c;
+    const result = { id:q.id, d:q.d, correct:isCorrect, picked:optOrder[pick], guessed:guessed, comment: guessComment.trim() ? guessComment.trim() : null };
     const newResults = [...sessionResults, result];
     setSessionResults(newResults);
     sessionResultsRef.current = newResults;
 
     if (qi + 1 >= qs.length) { setTicking(false); finishWith(newResults); }
-    else { setQi(function(n) { return n+1; }); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment(""); }
+    else {
+      var nextQ = qs[qi + 1];
+      setOptOrder(shuffle(nextQ.o.map(function(_, i) { return i; })));
+      setQi(function(n) { return n+1; }); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
+    }
   }
 
   function finishWith(results) {
@@ -731,7 +1011,12 @@ function App() {
           <div style={{ borderBottom:"1px solid #222", paddingBottom:20, marginBottom:24 }}>
             <div style={{ color:"#555", fontSize:11, letterSpacing:3, textTransform:"uppercase", marginBottom:6 }}>CompTIA A+ 220-1101</div>
             <div style={{ fontSize:26, fontWeight:700, color:"#e5e5e5", letterSpacing:-0.5 }}>Core 1 Study Hub</div>
-            <div style={{ color:"#555", fontSize:12, marginTop:6 }}>120 questions &middot; 5 domains &middot; persistent tracking</div>
+            <div style={{ color:"#555", fontSize:12, marginTop:6 }}>{QUESTIONS.length} questions &middot; 5 domains &middot; persistent tracking</div>
+            {prog.total > 0 && (function() {
+              var p = prog.total > 0 ? Math.round((prog.correct/prog.total)*100) : 0;
+              var msg = p >= 85 ? "You're crushing it -- keep that energy!" : p >= 70 ? "Solid progress, you're getting there!" : p >= 50 ? "Building momentum -- keep pushing!" : "Every question makes you stronger!";
+              return <div style={{ color: p>=70?"#34d399":"#fbbf24", fontSize:12, marginTop:8, fontWeight:500 }}>{msg}</div>;
+            })()}
           </div>
 
           {prog.total > 0 && (
@@ -774,25 +1059,54 @@ function App() {
             const ds = prog.ds[d.id];
             const dp = ds.a > 0 ? Math.round((ds.c/ds.a)*100) : null;
             const qCount = QUESTIONS.filter(function(q) { return q.d===d.id; }).length;
+            const isOpen = sizePickerDomain === d.id;
             return (
-              <button key={d.id} onClick={function() { startStudy(d.id); }} style={{ width:"100%", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:"14px 16px", cursor:"pointer", display:"flex", alignItems:"center", gap:14, marginBottom:6, transition:"border-color 0.15s", color:"#d4d4d4", textAlign:"left" }}
-                onMouseOver={function(e){e.currentTarget.style.borderColor=d.color+"66";}} onMouseOut={function(e){e.currentTarget.style.borderColor="#1a1a1a";}}>
-                <span style={{ fontSize:22, width:32, textAlign:"center" }}>{d.icon}</span>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:600, fontSize:13, color:"#e5e5e5" }}>{d.name}</div>
-                  <div style={{ fontSize:11, color:"#444", marginTop:2 }}>{d.w} of exam &middot; {qCount} questions</div>
-                </div>
-                {dp !== null && (
-                  <div style={{ fontSize:13, fontWeight:700, color: dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171" }}>{dp}%</div>
+              <div key={d.id} style={{ marginBottom:6 }}>
+                <button onClick={function() { setSizePickerDomain(isOpen ? null : d.id); }} style={{ width:"100%", background:"#111", border:"1px solid " + (isOpen ? d.color+"66" : "#1a1a1a"), borderRadius: isOpen ? "8px 8px 0 0" : 8, padding:"14px 16px", cursor:"pointer", display:"flex", alignItems:"center", gap:14, transition:"border-color 0.15s", color:"#d4d4d4", textAlign:"left" }}
+                  onMouseOver={function(e){ if(!isOpen) e.currentTarget.style.borderColor=d.color+"66";}} onMouseOut={function(e){ if(!isOpen) e.currentTarget.style.borderColor="#1a1a1a";}}>
+                  <span style={{ fontSize:22, width:32, textAlign:"center" }}>{d.icon}</span>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontWeight:600, fontSize:13, color:"#e5e5e5" }}>{d.name}</div>
+                    <div style={{ fontSize:11, color:"#444", marginTop:2 }}>{d.w} of exam &middot; {qCount} questions</div>
+                  </div>
+                  {dp !== null && (
+                    <div style={{ fontSize:13, fontWeight:700, color: dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171" }}>{dp}%</div>
+                  )}
+                  <div style={{ width:3, height:32, borderRadius:2, background: dp===null ? "#222" : dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171", opacity: dp===null ? 0.3 : 0.8 }} />
+                </button>
+                {isOpen && (
+                  <div style={{ display:"flex", gap:1, background:"#222", borderRadius:"0 0 8px 8px", overflow:"hidden" }}>
+                    {[{l:"Quick", n:10, desc:"10 Qs"}, {l:"Standard", n:15, desc:"15 Qs"}, {l:"Deep Dive", n:25, desc:"25 Qs"}].map(function(s) {
+                      return (
+                        <button key={s.n} onClick={function() { startStudy(d.id, s.n); }} style={{ flex:1, padding:"12px 8px", background:"#111", border:"none", cursor:"pointer", color:d.color, fontSize:12, fontWeight:600, transition:"background 0.15s" }}
+                          onMouseOver={function(e){e.currentTarget.style.background="#1a1a1a";}} onMouseOut={function(e){e.currentTarget.style.background="#111";}}>
+                          <div>{s.l}</div>
+                          <div style={{ fontSize:10, color:"#555", marginTop:2 }}>{s.desc}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 )}
-                <div style={{ width:3, height:32, borderRadius:2, background: dp===null ? "#222" : dp>=75 ? "#34d399" : dp>=50 ? "#fbbf24" : "#f87171", opacity: dp===null ? 0.3 : 0.8 }} />
-              </button>
+              </div>
             );
           })}
 
-          <button onClick={function() { startStudy(null); }} style={{ width:"100%", padding:"12px", background:"transparent", border:"1px solid #222", borderRadius:8, color:"#555", fontSize:12, fontWeight:600, cursor:"pointer", marginTop:16, marginBottom:8 }}>
+          <button onClick={function() { setSizePickerDomain(sizePickerDomain === 0 ? null : 0); }} style={{ width:"100%", padding:"12px", background:"transparent", border:"1px solid " + (sizePickerDomain === 0 ? "#a78bfa44" : "#222"), borderRadius: sizePickerDomain === 0 ? "8px 8px 0 0" : 8, color:"#555", fontSize:12, fontWeight:600, cursor:"pointer", marginTop:16, marginBottom: sizePickerDomain === 0 ? 0 : 8 }}>
             RANDOM MIX &mdash; All Domains
           </button>
+          {sizePickerDomain === 0 && (
+            <div style={{ display:"flex", gap:1, background:"#222", borderRadius:"0 0 8px 8px", overflow:"hidden", marginBottom:8 }}>
+              {[{l:"Quick", n:10, desc:"10 Qs"}, {l:"Standard", n:15, desc:"15 Qs"}, {l:"Deep Dive", n:25, desc:"25 Qs"}].map(function(s) {
+                return (
+                  <button key={s.n} onClick={function() { startStudy(null, s.n); }} style={{ flex:1, padding:"12px 8px", background:"#111", border:"none", cursor:"pointer", color:"#a78bfa", fontSize:12, fontWeight:600, transition:"background 0.15s" }}
+                    onMouseOver={function(e){e.currentTarget.style.background="#1a1a1a";}} onMouseOut={function(e){e.currentTarget.style.background="#111";}}>
+                    <div>{s.l}</div>
+                    <div style={{ fontSize:10, color:"#555", marginTop:2 }}>{s.desc}</div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <div style={{ display:"flex", gap:8, marginTop:8 }}>
             <button onClick={function() { setView("dashboard"); }} style={{ flex:1, padding:"12px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#888", fontSize:12, fontWeight:600, cursor:"pointer" }}>{"\u{1F4CA}"} Dashboard</button>
             {prog.total > 0 && (
@@ -809,7 +1123,7 @@ function App() {
     const q = qs[qi];
     if (!q) return null;
     const pBar = (qi / qs.length) * 100;
-    const isRight = pick === q.c;
+    const isRight = pick !== null && optOrder[pick] === q.c;
 
     return (
       <div style={styles.root}>
@@ -831,19 +1145,20 @@ function App() {
           <div style={{ fontSize:16, fontWeight:500, lineHeight:1.6, color:"#e5e5e5", marginBottom:28 }}>{q.q}</div>
 
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-            {q.o.map(function(opt, i) {
+            {optOrder.map(function(origIdx, displayIdx) {
+              var opt = q.o[origIdx];
               var bg = "#111", border = "#1a1a1a", tc = "#d4d4d4", indicator = null;
               if (locked) {
-                if (i === q.c) { bg="#34d39910"; border="#34d39944"; tc="#34d399"; indicator="\u2713"; }
-                else if (i === pick && !isRight) { bg="#f8717110"; border="#f8717144"; tc="#f87171"; indicator="\u2717"; }
+                if (origIdx === q.c) { bg="#34d39910"; border="#34d39944"; tc="#34d399"; indicator="\u2713"; }
+                else if (displayIdx === pick && !isRight) { bg="#f8717110"; border="#f8717144"; tc="#f87171"; indicator="\u2717"; }
                 else { tc="#333"; }
               }
               return (
-                <button key={i} onClick={function() { answer(i); }} disabled={locked} style={{ padding:"14px 16px", background:bg, border:"1px solid "+border, borderRadius:8, color:tc, fontSize:14, cursor:locked?"default":"pointer", textAlign:"left", transition:"all 0.12s", display:"flex", alignItems:"center", gap:12 }}
+                <button key={displayIdx} onClick={function() { answer(displayIdx); }} disabled={locked} style={{ padding:"14px 16px", background:bg, border:"1px solid "+border, borderRadius:8, color:tc, fontSize:14, cursor:locked?"default":"pointer", textAlign:"left", transition:"all 0.12s", display:"flex", alignItems:"center", gap:12 }}
                   onMouseOver={function(e) { if(!locked) { e.currentTarget.style.borderColor="#333"; e.currentTarget.style.background="#161616"; }}}
                   onMouseOut={function(e) { if(!locked) { e.currentTarget.style.borderColor="#1a1a1a"; e.currentTarget.style.background="#111"; }}}>
-                  <span style={{ width:26, height:26, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, background: indicator ? (i===q.c ? "#34d399" : "#f87171") : "#1a1a1a", color: indicator ? "#0c0c0c" : "#555", flexShrink:0 }}>
-                    {indicator || String.fromCharCode(65+i)}
+                  <span style={{ width:26, height:26, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, background: indicator ? (origIdx===q.c ? "#34d399" : "#f87171") : "#1a1a1a", color: indicator ? "#0c0c0c" : "#555", flexShrink:0 }}>
+                    {indicator || String.fromCharCode(65+displayIdx)}
                   </span>
                   <span style={{ lineHeight:1.5 }}>{opt}</span>
                 </button>
@@ -935,6 +1250,10 @@ function App() {
               </React.Fragment>
             )}
             <div style={{ fontSize:14, color:"#888", marginTop:score||mode==="baseline"?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
+            {mode !== "baseline" && (function() {
+              var msg = pct >= 90 ? "Absolutely nailed it!" : pct >= 75 ? "Strong session -- you know your stuff!" : pct >= 60 ? "Good work! Review the misses below and you'll own these next time." : pct >= 40 ? "Getting there -- focus on the domains below and come back stronger." : "Tough round, but now you know what to study. That's the whole point!";
+              return <div style={{ fontSize:13, color: pct>=75?"#34d399":pct>=50?"#fbbf24":"#f87171", marginTop:10, fontWeight:500, maxWidth:400, margin:"10px auto 0", lineHeight:1.5 }}>{msg}</div>;
+            })()}
             {guessedCount > 0 && (
               <div style={{ marginTop:8 }}>
                 <div style={{ fontSize:12, color:"#fbbf24" }}>{"\u{1F3B2}"} {guessedCount} guessed &mdash; real accuracy: {knownCorrect}/{knownTotal} ({realPct}%)</div>
