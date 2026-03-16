@@ -790,6 +790,91 @@ function CopyProgress({ prog }) {
   );
 }
 
+function copyText(text, setCopied) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      setCopied(true); setTimeout(function() { setCopied(false); }, 2500);
+    }).catch(function() { copyFallback(text, setCopied); });
+  } else { copyFallback(text, setCopied); }
+}
+function copyFallback(text, setCopied) {
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+  document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+  setCopied(true); setTimeout(function() { setCopied(false); }, 2500);
+}
+
+function buildFullResultsText(results, sessionMode, sessionDomain, sessionDate) {
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var total = results.length;
+  var pct = Math.round((correct / Math.max(total, 1)) * 100);
+  var guessedCount = results.filter(function(r) { return r.guessed; }).length;
+
+  var txt = "=== SESSION RESULTS ===\n";
+  txt += "Date: " + (sessionDate || new Date().toLocaleDateString()) + "\n";
+  var modeLabel = sessionMode === "baseline" ? "Baseline Diagnostic" : sessionMode === "exam" ? "Practice Exam" : "Study";
+  txt += "Mode: " + modeLabel;
+  if (sessionMode === "study" && sessionDomain) txt += " | Domain: " + DOMAIN_NAMES[sessionDomain];
+  if (sessionMode === "study" && !sessionDomain) txt += " | All Domains";
+  txt += "\n";
+  txt += "Score: " + correct + "/" + total + " (" + pct + "%)\n";
+  if (sessionMode === "exam") {
+    var score = Math.round((correct / Math.max(total, 1)) * 900);
+    txt += "Exam Score: " + score + "/900 " + (score >= 675 ? "PASS" : "FAIL") + "\n";
+  }
+  if (guessedCount > 0) {
+    var knownC = results.filter(function(r) { return r.correct && !r.guessed; }).length;
+    var knownT = results.filter(function(r) { return !r.guessed; }).length;
+    txt += "Guessed: " + guessedCount + " | Real accuracy (no guesses): " + knownC + "/" + knownT + " (" + (knownT > 0 ? Math.round((knownC/knownT)*100) : 0) + "%)\n";
+  }
+
+  // Domain breakdown
+  txt += "\nDomain Breakdown:\n";
+  DOMAINS.forEach(function(d) {
+    var dr = results.filter(function(r) { return r.d === d.id; });
+    if (dr.length === 0) return;
+    var dc = dr.filter(function(r) { return r.correct; }).length;
+    var dg = dr.filter(function(r) { return r.guessed; }).length;
+    var dp = Math.round((dc / dr.length) * 100);
+    txt += d.icon + " " + d.name + ": " + dc + "/" + dr.length + " (" + dp + "%)";
+    if (dg > 0) txt += " [" + dg + " guessed]";
+    txt += "\n";
+  });
+
+  // Full Q&A
+  txt += "\n--- ALL QUESTIONS & ANSWERS ---\n";
+  results.forEach(function(r, idx) {
+    var q = QUESTIONS.find(function(x) { return x.id === r.id; });
+    if (!q) return;
+    txt += "\n" + (idx + 1) + ". [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n";
+    txt += "   Your answer: " + q.o[r.picked];
+    if (r.correct) {
+      txt += " -- CORRECT";
+    } else {
+      txt += " -- INCORRECT\n   Correct answer: " + q.o[q.c];
+    }
+    if (r.guessed) txt += " [GUESSED]";
+    txt += "\n";
+    if (r.comment) txt += "   Your note: " + r.comment + "\n";
+    txt += "   Explanation: " + q.ex + "\n";
+  });
+
+  txt += "\n=== PASTE TO CLAUDE FOR STUDY SUGGESTIONS & NEW QUESTIONS ===\n";
+  return txt;
+}
+
+function CopySessionResults({ results, mode, domain, label, date }) {
+  var btnLabel = label || "Copy Session Results -- paste to Claude";
+  var copiedLabel = label ? "\u2713 Copied!" : "\u2713 Copied! Paste it in our chat";
+  const [copied, setCopied] = useState(false);
+  return (
+    <button onClick={function() { copyText(buildFullResultsText(results, mode, domain, date), setCopied); }}
+      style={{ width:"100%", padding:"14px", background: copied ? "#34d39915" : "#111", border:"1px solid " + (copied ? "#34d39944" : "#60a5fa44"), borderRadius:8, color: copied ? "#34d399" : "#60a5fa", fontSize:13, fontWeight:600, cursor:"pointer", transition:"all 0.2s", marginBottom:8 }}>
+      {copied ? copiedLabel : "\u{1F4CB} " + btnLabel}
+    </button>
+  );
+}
+
 function BaselineReport({ results, domBreak, correct, total, pct, guessedCount, knownCorrect, knownTotal, realPct }) {
   const [copied, setCopied] = useState(false);
 
@@ -987,7 +1072,7 @@ function App() {
       p.baselines.push({ date: new Date().toLocaleDateString(), correct: results.filter(function(r){return r.correct;}).length, total: results.length, guessed: results.filter(function(r){return r.guessed;}).length, domains: domScores });
     }
     const g = results.filter(function(r) { return r.guessed; }).length;
-    p.sessions.push({ date: new Date().toLocaleDateString(), mode:mode, domain: domainFilter, total: results.length, correct: results.filter(function(r) { return r.correct; }).length, guessed: g });
+    p.sessions.push({ date: new Date().toLocaleDateString(), mode:mode, domain: domainFilter, total: results.length, correct: results.filter(function(r) { return r.correct; }).length, guessed: g, results: results });
     save(p);
     setSessionResults(results);
     setView("results");
@@ -1347,6 +1432,8 @@ function App() {
             <BaselineReport results={sessionResults} domBreak={domBreak} correct={correct} total={total} pct={pct} guessedCount={guessedCount} knownCorrect={knownCorrect} knownTotal={knownTotal} realPct={realPct} />
           )}
 
+          <CopySessionResults results={sessionResults} mode={mode} domain={domainFilter} />
+
           <div style={{ display:"flex", gap:8 }}>
             <button onClick={function() { setView("home"); }} style={{ flex:1, padding:"14px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:14, fontWeight:700, cursor:"pointer" }}>Home</button>
             <button onClick={function() { setView("dashboard"); }} style={{ flex:1, padding:"14px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#888", fontSize:13, fontWeight:600, cursor:"pointer" }}>Dashboard</button>
@@ -1427,9 +1514,17 @@ function App() {
               <div style={{ fontSize:11, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:14 }}>Recent Sessions</div>
               {prog.sessions.slice().reverse().slice(0,10).map(function(s,i) {
                 return (
-                  <div key={i} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #1a1a1a", fontSize:12 }}>
-                    <span style={{ color:"#666" }}>{s.date} &middot; {s.mode === "baseline" ? "Baseline" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
-                    <span style={{ color: Math.round((s.correct/Math.max(s.total,1))*100)>=75 ? "#34d399" : "#fbbf24", fontWeight:700 }}>{s.correct}/{s.total}</span>
+                  <div key={i} style={{ background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:"12px 16px", marginBottom:6 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <span style={{ color:"#666", fontSize:12 }}>{s.date} &middot; {s.mode === "baseline" ? "Baseline" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
+                      <span style={{ color: Math.round((s.correct/Math.max(s.total,1))*100)>=75 ? "#34d399" : "#fbbf24", fontWeight:700, fontSize:12 }}>{s.correct}/{s.total}</span>
+                    </div>
+                    {s.results && (
+                      <div style={{ marginTop:8 }}><CopySessionResults results={s.results} mode={s.mode} domain={s.domain} date={s.date} label={"Copy results"} /></div>
+                    )}
+                    {!s.results && (
+                      <div style={{ fontSize:11, color:"#333", marginTop:6, fontStyle:"italic" }}>No detailed results (session before this feature)</div>
+                    )}
                   </div>
                 );
               })}
