@@ -36,7 +36,24 @@ Guessed: 6 | Real accuracy (no guesses): 12/14 (86%)
 ==================================================
 STUDY SESSIONS
 ==================================================
-No additional sessions yet. Baseline was first session.
+
+--- Session 1: 2026-03-16 ---
+Mode: Study | Domain: Networking
+Score: 8/10 (80%)
+Guessed: 3 | Real accuracy (no guesses): 7/7 (100%)
+
+Weak areas identified:
+- Networking 2.1: Email ports (POP3S 995, IMAPS 993, SMTPS 465, SMTP 587) — self-identified as weak
+- Networking 2.4: DNS record types (confused A vs AAAA, unfamiliar with record types overall)
+- Networking 2.3: Wi-Fi standard feature mapping (didn't know OFDMA/MU-MIMO = 802.11ax)
+
+Recommendations:
+- Drill port numbers next session — email ports, SSH/SFTP/FTP, RDP, and HTTP/HTTPS
+- Study DNS record types: A, AAAA, MX, CNAME, PTR, TXT, SOA, SRV, NS
+- Review Wi-Fi standards table: map each standard to frequency, max speed, and key features
+- Clarify T568A/T568B wiring standards vs RJ-45 connector type
+
+New questions written: 201-210
 
 ==================================================
 EXAM ATTEMPTS
@@ -44,10 +61,10 @@ EXAM ATTEMPTS
 No exam attempts yet.
 
 ==================================================
-DOMAIN TRACKER (updated 2026-03-10)
+DOMAIN TRACKER (updated 2026-03-16)
 ==================================================
 Domain 1 - Mobile Devices (15%):            75%  STRONG      (review CDMA/GSM history)
-Domain 2 - Networking (20%):               25%  *** WEAK *** (priority #1)
+Domain 2 - Networking (20%):               80%  IMPROVING   (was 25% -- ports/DNS/Wi-Fi still need drilling)
 Domain 3 - Hardware (25%):                100%  STRONG      (but 1 lucky guess -- review DDR pin counts)
 Domain 4 - Virtualization & Cloud (11%):   75%  STRONG      (review IaaS vs PaaS vs SaaS)
 Domain 5 - Troubleshooting (29%):          75%  STRONG      (review error messages & physical layer clues)
@@ -87,5 +104,5 @@ Priority order based on baseline + exam weight:
      Recommended: 1 domain drill
 
 --------------------------------------------------
-Next milestone: Get Networking to 75%+ on a domain drill
+Next milestone: Hit Networking 90%+ with zero guesses on a domain drill
 --------------------------------------------------
