@@ -186,3 +186,21 @@ Priority order based on baseline + exam weight:
 --------------------------------------------------
 Next milestone: Get Hardware back to 100% (power connectors + 32-bit limit) and Networking 90%+ with zero guesses
 --------------------------------------------------
+
+=== SESSION LOG ===
+Date: 3/19/2026
+Mode: Study | All Domains
+Score: 22/25 (88%)
+Guessed: 0
+Weak areas identified:
+- Mobile Devices 1.1: AC adapter vs inverter board confusion — jumped too fast
+- Hardware 3.3: CPU socket generations — confused AM4 (Ryzen 1000-5000) with AM5 (Ryzen 7000+)
+- Virtualization & Cloud 4.2: VM snapshot vs backup distinction — thought snapshot was a backup of host OS
+- Networking 2.1: Port confidence still building — got IMAPS 993 but flagged low confidence
+Recommendations:
+- Lock in: AC adapter = wall to laptop power, inverter = DC-to-AC for CCFL backlights only
+- Memorize socket map: AM4 = Ryzen 1000-5000, AM5 = Ryzen 7000+, LGA 1700 = Intel 12th-14th gen
+- Snapshot = temporary rollback point (save state), backup = full copy stored elsewhere
+- Add VNC 5900 to port knowledge alongside RDP 3389 and SSH 22
+- Continue port drilling — improving but still not automatic
+New questions written: 233-242

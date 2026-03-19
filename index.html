@@ -770,6 +770,56 @@ ex:"Safe Mode loads only essential drivers and services, bypassing the problemat
 { id:232, d:2, obj:"2.1", q:"A tech is told to 'SSH into the server.' Which port will this connection use by default?",
 o:["21","22","23","3389"], c:1,
 ex:"SSH = port 22, always. It provides encrypted command-line access. Port 21 is FTP. Port 23 is Telnet (unencrypted remote CLI — the insecure version of SSH). Port 3389 is RDP (GUI remote access)." },
+
+// -- Question 233: Mobile Devices (laptop power path) --
+{ id:233, d:1, obj:"1.1", q:"A laptop won't charge. The tech tests the wall outlet and it works fine. Which component between the wall and the laptop battery is MOST likely faulty?",
+o:["Inverter board","AC adapter (power brick)","LCD panel","DC-in jack or AC adapter"], c:3,
+ex:"The AC adapter converts wall AC to DC for the laptop. If the outlet works but the laptop won't charge, check the AC adapter first, then the DC-in jack. The inverter is for CCFL backlights, not power delivery." },
+
+// -- Question 234: Mobile Devices (inverter board) --
+{ id:234, d:1, obj:"1.1", q:"A technician replaces an older laptop's CCFL backlight. Which component drives this backlight by converting DC to AC?",
+o:["AC adapter","Power supply unit","Inverter board","Digitizer"], c:2,
+ex:"The inverter board converts DC power to AC to drive CCFL backlights in older LCDs. Modern LED-backlit displays don't need an inverter. The AC adapter converts wall AC to DC — the opposite direction." },
+
+// -- Question 235: Hardware (Ryzen socket upgrade) --
+{ id:235, d:3, obj:"3.3", q:"A technician is upgrading a Ryzen 5 5600X system to a Ryzen 7 7700X. What MUST be replaced along with the CPU?",
+o:["Only the CPU cooler","The motherboard (different socket)","The RAM and power supply","The GPU and storage drive"], c:1,
+ex:"Ryzen 5000 = AM4 socket. Ryzen 7000 = AM5 socket. The motherboard must be replaced because the sockets are incompatible. AM5 also requires DDR5 RAM, but the question asks what MUST change — the board." },
+
+// -- Question 236: Hardware (AM5 LGA socket) --
+{ id:236, d:3, obj:"3.3", q:"Which AMD socket type uses LGA (Land Grid Array) where pins are on the motherboard instead of the CPU?",
+o:["AM3","AM4","AM5","FM2+"], c:2,
+ex:"AM5 is AMD's first LGA socket (LGA 1718) — pins on the board, not the CPU. AM4 and all previous AMD consumer sockets were PGA (pins on the CPU). Intel has used LGA for years." },
+
+// -- Question 237: Virtualization & Cloud (VM snapshot rollback) --
+{ id:237, d:4, obj:"4.2", q:"A developer takes a VM snapshot before installing a risky update. The update breaks the application. What can the developer do?",
+o:["Restore from the cloud backup","Revert to the snapshot to undo the update","Reinstall the host operating system","Run a memory diagnostic on the VM"], c:1,
+ex:"Reverting to a snapshot restores the VM to its exact state when the snapshot was taken, undoing the failed update. Snapshots are quick rollback points — like save states in a video game." },
+
+// -- Question 238: Virtualization & Cloud (snapshot limitations) --
+{ id:238, d:4, obj:"4.2", q:"Why should VM snapshots NOT be used as long-term backups?",
+o:["Snapshots are automatically deleted after 24 hours","Snapshots consume growing disk space and degrade VM performance over time","Snapshots can only save RAM, not disk state","Snapshots require the host OS to be shut down"], c:1,
+ex:"Snapshots track all changes since creation, growing in size and slowing disk I/O. They're meant as temporary rollback points, not permanent backups. Use proper backup solutions for long-term retention." },
+
+// -- Question 239: Networking (SSH + RDP port pair) --
+{ id:239, d:2, obj:"2.1", q:"A tech needs to remotely manage a Linux server's command line AND allow a coworker to view a Windows PC's desktop. Which port pair is needed?",
+o:["22 and 443","23 and 3389","22 and 3389","21 and 5900"], c:2,
+ex:"SSH (port 22) = Linux command-line remote access. RDP (port 3389) = Windows GUI remote desktop. Port 23 is Telnet (insecure). Port 5900 is VNC (cross-platform remote desktop)." },
+
+// -- Question 240: Networking (VNC port) --
+{ id:240, d:2, obj:"2.1", q:"Which protocol and port provides cross-platform remote desktop access and is an alternative to RDP?",
+o:["SSH on port 22","Telnet on port 23","VNC on port 5900","SNMP on port 161"], c:2,
+ex:"VNC (Virtual Network Computing) uses port 5900 and works across Windows, Mac, and Linux. RDP (3389) is Windows-native. SSH (22) is command-line only. Telnet (23) is insecure CLI access." },
+
+// -- Question 241: Hardware (LGA 1700 socket) --
+{ id:241, d:3, obj:"3.3", q:"A technician is building a PC for a customer using an Intel Core i7-13700K. Which socket does the motherboard need?",
+o:["AM4","AM5","LGA 1200","LGA 1700"], c:3,
+ex:"Intel 12th, 13th, and 14th gen use LGA 1700. LGA 1200 is 10th/11th gen. AM4 and AM5 are AMD sockets. Always verify socket compatibility before buying a motherboard." },
+
+// -- Question 242: Networking (VNC firewall detection) --
+{ id:242, d:2, obj:"2.1", q:"A firewall log shows traffic on port 5900 from an unknown source. What type of remote access is being attempted?",
+o:["SSH","RDP","VNC","SNMP"], c:2,
+ex:"Port 5900 = VNC (Virtual Network Computing) remote desktop. Unknown VNC traffic could be unauthorized remote access. SSH = 22, RDP = 3389, SNMP = 161." },
 ];
 
 const DOMAINS = [
