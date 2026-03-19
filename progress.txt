@@ -116,6 +116,25 @@ Recommendations:
 
 New questions written: 215-220
 
+--- Session 7: 2026-03-19 ---
+Mode: Study | All Domains
+Score: 12/15 (80%)
+Guessed: 1 | Real accuracy (no guesses): 12/14 (86%)
+
+Weak areas identified:
+- Networking 2.1: RDP port 3389 — defaulted to SSH 22 due to personal Linux habits
+- Troubleshooting 5.2: BSOD error codes — unfamiliar with IRQL_NOT_LESS_OR_EQUAL and related stop errors
+- Mobile Devices 1.4: Exchange ActiveSync — didn't recognize it as the protocol for email+contacts+calendar sync
+- Networking 2.4: DNS records — got MX correct but flagged low confidence
+
+Recommendations:
+- Learn the 4 key BSOD codes: IRQL (RAM/driver), KERNEL_DATA_INPAGE (storage), PAGE_FAULT (RAM), DRIVER_IRQL (driver)
+- Drill SSH 22 vs RDP 3389 distinction — terminal vs GUI
+- Memorize: "email + contacts + calendar = Exchange ActiveSync" vs "email only = IMAP"
+- Continue DNS record drilling
+
+New questions written: 223-232
+
 ==================================================
 EXAM ATTEMPTS
 ==================================================
@@ -124,11 +143,11 @@ No exam attempts yet.
 ==================================================
 DOMAIN TRACKER (updated 2026-03-19)
 ==================================================
-Domain 1 - Mobile Devices (15%):            90%  STRONG      (review display panel types: OLED vs IPS vs TN)
-Domain 2 - Networking (20%):               90%  STRONG      (was 80% -- drill IPv4 ranges & SNMP ports)
+Domain 1 - Mobile Devices (15%):            90%  STRONG      (learn Exchange ActiveSync; review display panels)
+Domain 2 - Networking (20%):               90%  STRONG      (drill SSH 22 vs RDP 3389; IPv4 ranges; DNS records)
 Domain 3 - Hardware (25%):                 80%  IMPROVING   (was 100% -- learn power connectors & 32-bit limit)
 Domain 4 - Virtualization & Cloud (11%):  100%  MASTERED
-Domain 5 - Troubleshooting (29%):         100%  MASTERED
+Domain 5 - Troubleshooting (29%):         100%  STRONG      (learn BSOD codes: IRQL, KERNEL_DATA_INPAGE, PAGE_FAULT)
 
 ==================================================
 STUDY PLAN (generated 2026-03-10)
