@@ -820,6 +820,46 @@ ex:"Intel 12th, 13th, and 14th gen use LGA 1700. LGA 1200 is 10th/11th gen. AM4 
 { id:242, d:2, obj:"2.1", q:"A firewall log shows traffic on port 5900 from an unknown source. What type of remote access is being attempted?",
 o:["SSH","RDP","VNC","SNMP"], c:2,
 ex:"Port 5900 = VNC (Virtual Network Computing) remote desktop. Unknown VNC traffic could be unauthorized remote access. SSH = 22, RDP = 3389, SNMP = 161." },
+
+// -- Question 243: Troubleshooting (BSOD PAGE_FAULT = RAM) --
+{ id:243, d:5, obj:"5.2", q:"A BSOD displays 'PAGE_FAULT_IN_NONPAGED_AREA' after installing new RAM. What should the tech do FIRST?",
+o:["Run chkdsk on the system drive","Run a memory diagnostic tool","Reinstall the operating system","Replace the motherboard"], c:1,
+ex:"PAGE_FAULT = memory issue. The word 'PAGE' refers to memory pages, not disk pages. Run memtest86 or Windows Memory Diagnostic first. chkdsk checks disk — wrong tool for a memory error." },
+
+// -- Question 244: Networking (IMAPS + SMTP STARTTLS ports) --
+{ id:244, d:2, obj:"2.1", q:"A company email server uses IMAPS for receiving and SMTP with STARTTLS for sending. Which port pair is in use?",
+o:["110 and 25","143 and 465","993 and 587","995 and 465"], c:2,
+ex:"IMAPS = 993 (encrypted IMAP receiving). SMTP with STARTTLS = 587 (encrypted sending). Port 110 = POP3 unencrypted. Port 143 = IMAP unencrypted. Port 25 = SMTP unencrypted." },
+
+// -- Question 245: Networking (POP3S + implicit TLS ports) --
+{ id:245, d:2, obj:"2.1", q:"Which secure email port pair uses POP3S for receiving and implicit TLS for sending?",
+o:["993 and 587","995 and 587","995 and 465","143 and 25"], c:2,
+ex:"POP3S = 995 (encrypted POP3 receiving). SMTPS = 465 (implicit TLS for sending). 587 uses STARTTLS (upgrade-based encryption). 993 is IMAPS, not POP3S." },
+
+// -- Question 246: Mobile Devices (Exchange ActiveSync) --
+{ id:246, d:1, obj:"1.4", q:"After configuring IMAP on a user's phone, email syncs but the calendar and contacts do not. Which protocol would resolve this?",
+o:["POP3","SMTP","Exchange ActiveSync","SNMP"], c:2,
+ex:"IMAP handles email only. Exchange ActiveSync is a push protocol that syncs email, contacts, AND calendar together. POP3 downloads email. SMTP sends. SNMP monitors network devices." },
+
+// -- Question 247: Networking (APIPA address) --
+{ id:247, d:2, obj:"2.6", q:"A technician sees a workstation with IP 169.254.12.50. What does this indicate?",
+o:["The device is using a loopback address","The DHCP server is unavailable","The device has a valid static IP","The device is on a public network"], c:1,
+ex:"169.254.x.x is an APIPA address — auto-assigned when no DHCP server responds. The device can communicate locally but NOT reach the internet. 127.x.x.x is loopback. APIPA ≠ static IP." },
+
+// -- Question 248: Networking (private IPv4 ranges) --
+{ id:248, d:2, obj:"2.6", q:"Which THREE address ranges are designated as private IPv4 address space? (Choose the correct set)",
+o:["10.x.x.x, 127.x.x.x, 192.168.x.x","10.x.x.x, 172.16-31.x.x, 192.168.x.x","127.x.x.x, 169.254.x.x, 172.16-31.x.x","10.x.x.x, 169.254.x.x, 224.x.x.x"], c:1,
+ex:"Private ranges: 10.0.0.0/8 (Class A), 172.16.0.0/12 (Class B), 192.168.0.0/16 (Class C). 127.x.x.x = loopback. 169.254.x.x = APIPA. 224.x.x.x = multicast." },
+
+// -- Question 249: Networking (SNMP definition) --
+{ id:249, d:2, obj:"2.1", q:"What does SNMP stand for, and what is it used for?",
+o:["Simple Network Mail Protocol — sending email between servers","Simple Network Management Protocol — monitoring network devices","Secure Network Messaging Protocol — encrypted chat","Server Network Mapping Protocol — discovering network topology"], c:1,
+ex:"SNMP = Simple Network Management Protocol. It monitors and manages switches, routers, and servers. Port 161 for queries (polling), port 162 for traps (alerts). Not related to email or messaging." },
+
+// -- Question 250: Networking (MU-MIMO Wi-Fi 5) --
+{ id:250, d:2, obj:"2.3", q:"MU-MIMO was first introduced as a downlink-only feature in which Wi-Fi standard?",
+o:["802.11n (Wi-Fi 4)","802.11ac (Wi-Fi 5)","802.11ax (Wi-Fi 6)","802.11g"], c:1,
+ex:"Wi-Fi 5 (802.11ac) introduced MU-MIMO but only for downlink (AP to devices). Wi-Fi 6 (802.11ax) upgraded it to work both directions AND added OFDMA. Wi-Fi 4 introduced basic MIMO (single user)." },
 ];
 
 const DOMAINS = [
@@ -913,7 +953,7 @@ function CopyProgress({ prog }) {
     if (prog.sessions && prog.sessions.length > 0) {
       txt += "\nLast 5 Sessions:\n";
       prog.sessions.slice(-5).reverse().forEach(function(s) {
-        const label = s.mode === "baseline" ? "Baseline Diagnostic" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains";
+        const label = s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains";
         txt += s.date + " " + label + ": " + s.correct + "/" + s.total + "\n";
       });
     }
@@ -976,7 +1016,7 @@ function buildFullResultsText(results, sessionMode, sessionDomain, sessionDate) 
 
   var txt = "=== SESSION RESULTS ===\n";
   txt += "Date: " + (sessionDate || new Date().toLocaleDateString()) + "\n";
-  var modeLabel = sessionMode === "baseline" ? "Baseline Diagnostic" : sessionMode === "exam" ? "Practice Exam" : "Study";
+  var modeLabel = sessionMode === "exam" ? "Practice Exam" : "Study";
   txt += "Mode: " + modeLabel;
   if (sessionMode === "study" && sessionDomain) txt += " | Domain: " + DOMAIN_NAMES[sessionDomain];
   if (sessionMode === "study" && !sessionDomain) txt += " | All Domains";
@@ -1039,79 +1079,7 @@ function CopySessionResults({ results, mode, domain, label, date }) {
   );
 }
 
-function BaselineReport({ results, domBreak, correct, total, pct, guessedCount, knownCorrect, knownTotal, realPct }) {
-  const [copied, setCopied] = useState(false);
-
-  function buildBaselineText() {
-    var txt = "=== BASELINE DIAGNOSTIC RESULTS ===\n";
-    txt += "Date: " + new Date().toLocaleDateString() + "\n";
-    txt += "Score: " + correct + "/" + total + " (" + pct + "%)\n";
-    if (guessedCount > 0) txt += "Guessed: " + guessedCount + " | Real accuracy: " + knownCorrect + "/" + knownTotal + " (" + realPct + "%)\n";
-    txt += "\nDomain Breakdown:\n";
-    domBreak.forEach(function(d) {
-      var status = d.pct >= 75 ? "STRONG" : d.pct >= 50 ? "DEVELOPING" : "WEAK";
-      txt += d.icon + " " + d.name + " (" + d.w + "): " + d.correct + "/" + d.total + " (" + d.pct + "%) -- " + status;
-      if (d.guessed > 0) txt += " [" + d.guessed + " guessed]";
-      txt += "\n";
-    });
-    txt += "\nMissed Questions:\n";
-    results.filter(function(r) { return !r.correct; }).forEach(function(r) {
-      var q = QUESTIONS.find(function(x) { return x.id === r.id; });
-      if (q) {
-        txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Your answer: " + q.o[r.picked] + " | Correct: " + q.o[q.c] + (r.guessed ? " [GUESSED]" : "") + "\n";
-        if (r.comment) txt += "  Note: " + r.comment + "\n";
-      }
-    });
-    var luckyOnes = results.filter(function(r) { return r.correct && r.guessed; });
-    if (luckyOnes.length > 0) {
-      txt += "\nLucky Guesses (got right but flagged):\n";
-      luckyOnes.forEach(function(r) {
-        var q = QUESTIONS.find(function(x) { return x.id === r.id; });
-        if (q) {
-          txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n";
-          if (r.comment) txt += "  Note: " + r.comment + "\n";
-        }
-      });
-    }
-    var notedCorrect = results.filter(function(r) { return r.correct && !r.guessed && r.comment; });
-    if (notedCorrect.length > 0) {
-      txt += "\nNotes on correct answers:\n";
-      notedCorrect.forEach(function(r) {
-        var q = QUESTIONS.find(function(x) { return x.id === r.id; });
-        if (q) txt += "- [" + DOMAIN_NAMES[q.d] + " " + q.obj + "] " + q.q + "\n  Note: " + r.comment + "\n";
-      });
-    }
-    txt += "\n=== PASTE THIS TO CLAUDE TO SET YOUR BASELINE ===\n";
-    return txt;
-  }
-
-  function handleCopy() {
-    var text = buildBaselineText();
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function() { setCopied(true); setTimeout(function() { setCopied(false); }, 2500); }).catch(function() { fallback(text); });
-    } else { fallback(text); }
-  }
-
-  function fallback(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
-    document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
-    setCopied(true); setTimeout(function() { setCopied(false); }, 2500);
-  }
-
-  return (
-    <div style={{ marginBottom:24 }}>
-      <div style={{ background:"linear-gradient(135deg, #a78bfa15, #60a5fa15)", border:"1px solid #a78bfa33", borderRadius:12, padding:20 }}>
-        <div style={{ fontSize:13, fontWeight:700, color:"#a78bfa", marginBottom:8 }}>Baseline Complete!</div>
-        <div style={{ fontSize:12, color:"#999", lineHeight:1.7, marginBottom:16 }}>
-          Copy your results below and paste them to Claude. This creates your personalized study baseline so Claude can track your progress and focus on your weak areas.
-        </div>
-        <button onClick={handleCopy} style={{ width:"100%", padding:"14px", background: copied ? "#34d39915" : "#111", border:"1px solid " + (copied ? "#34d39944" : "#a78bfa44"), borderRadius:8, color: copied ? "#34d399" : "#a78bfa", fontSize:13, fontWeight:700, cursor:"pointer", transition:"all 0.2s" }}>
-          {copied ? "\u2713 Copied! Now paste it in our chat" : "\u{1F4CB} Copy Baseline Results for Claude"}
-        </button>
-      </div>
-    </div>
-  );
+function BaselineReport() { return null; /* baseline diagnostic removed */
 }
 
 function App() {
@@ -1154,18 +1122,7 @@ function App() {
     }
   }
 
-  function startBaseline() {
-    var picked = [];
-    DOMAINS.forEach(function(d) {
-      var pool = QUESTIONS.filter(function(q) { return q.d === d.id; });
-      picked = picked.concat(pickRotated(pool, 4));
-    });
-    var shuffled = shuffle(picked);
-    setQs(shuffled); initOptOrder(shuffled);
-    setQi(0); setPick(null); setLocked(false); setShowExp(false); setGuessed(false); setGuessComment("");
-    setSessionResults([]); sessionResultsRef.current = []; setMode("baseline"); setDomainFilter(null);
-    setSizePickerDomain(null); setView("quiz");
-  }
+  /* baseline diagnostic removed */
 
   function startStudy(domain, size) {
     var sz = size || 15;
@@ -1188,7 +1145,7 @@ function App() {
   function answer(i) {
     if (locked) return;
     setPick(i); setLocked(true); setGuessed(false); setGuessComment("");
-    if (mode === "study" || mode === "baseline") setShowExp(true);
+    if (mode === "study") setShowExp(true);
   }
 
   function next() {
@@ -1223,17 +1180,6 @@ function App() {
       const g = results.filter(function(r) { return r.guessed; }).length;
       const score = Math.round((c/Math.max(t,1))*900);
       p.exams.push({ date: new Date().toLocaleDateString(), score:score, c:c, t:t, g:g, pass: score >= 675 });
-    }
-    if (mode === "baseline") {
-      if (!p.baselines) p.baselines = [];
-      const domScores = {};
-      DOMAINS.forEach(function(d) {
-        const dr = results.filter(function(r) { return r.d === d.id; });
-        const dc = dr.filter(function(r) { return r.correct; }).length;
-        const dg = dr.filter(function(r) { return r.guessed; }).length;
-        domScores[d.id] = { total: dr.length, correct: dc, guessed: dg, pct: dr.length > 0 ? Math.round((dc/dr.length)*100) : 0 };
-      });
-      p.baselines.push({ date: new Date().toLocaleDateString(), correct: results.filter(function(r){return r.correct;}).length, total: results.length, guessed: results.filter(function(r){return r.guessed;}).length, domains: domScores });
     }
     const g = results.filter(function(r) { return r.guessed; }).length;
     p.sessions.push({ date: new Date().toLocaleDateString(), mode:mode, domain: domainFilter, total: results.length, correct: results.filter(function(r) { return r.correct; }).length, guessed: g, results: results });
@@ -1283,19 +1229,6 @@ function App() {
                 );
               })}
             </div>
-          )}
-
-          {!prog.sessions || !prog.sessions.some(function(s) { return s.mode === "baseline"; }) ? (
-            <button onClick={startBaseline} style={{ width:"100%", padding:"18px", background:"linear-gradient(135deg, #a78bfa, #60a5fa)", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:12, letterSpacing:0.3, transition:"opacity 0.15s", position:"relative", overflow:"hidden" }}
-              onMouseOver={function(e){e.currentTarget.style.opacity="0.9";}} onMouseOut={function(e){e.currentTarget.style.opacity="1";}}>
-              BASELINE DIAGNOSTIC &mdash; 20 questions
-              <div style={{ fontSize:11, fontWeight:400, marginTop:4, opacity:0.8 }}>Find your strengths &amp; weaknesses first</div>
-            </button>
-          ) : (
-            <button onClick={startBaseline} style={{ width:"100%", padding:"14px", background:"#111", border:"1px solid #a78bfa33", borderRadius:8, fontSize:13, fontWeight:600, cursor:"pointer", marginBottom:12, color:"#a78bfa", transition:"border-color 0.15s" }}
-              onMouseOver={function(e){e.currentTarget.style.borderColor="#a78bfa66";}} onMouseOut={function(e){e.currentTarget.style.borderColor="#a78bfa33";}}>
-              RETAKE DIAGNOSTIC &mdash; 20 questions
-            </button>
           )}
 
           <button onClick={startExam} style={{ width:"100%", padding:"18px", background:"#e5e5e5", color:"#0c0c0c", border:"none", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginBottom:20, letterSpacing:0.3, transition:"background 0.15s" }}
@@ -1485,12 +1418,6 @@ function App() {
       <div style={styles.root}>
         <div style={styles.container}>
           <div style={{ textAlign:"center", paddingTop:20, marginBottom:32 }}>
-            {mode === "baseline" && (
-              <React.Fragment>
-                <div style={{ fontSize:11, color:"#a78bfa", letterSpacing:3, textTransform:"uppercase", marginBottom:8 }}>Baseline Diagnostic</div>
-                <div style={{ fontSize:56, fontWeight:900, color: pct>=75?"#34d399":pct>=50?"#fbbf24":"#f87171", letterSpacing:-2 }}>{pct}%</div>
-              </React.Fragment>
-            )}
             {score !== null && (
               <React.Fragment>
                 <div style={{ fontSize:56, fontWeight:900, color: passed?"#34d399":"#f87171", letterSpacing:-2 }}>{score}</div>
@@ -1498,8 +1425,8 @@ function App() {
                 <div style={{ fontSize:12, color:"#444" }}>675 needed to pass</div>
               </React.Fragment>
             )}
-            <div style={{ fontSize:14, color:"#888", marginTop:score||mode==="baseline"?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
-            {mode !== "baseline" && (function() {
+            <div style={{ fontSize:14, color:"#888", marginTop:score?8:0 }}>{correct}/{total} correct &mdash; {pct}%</div>
+            {(function() {
               var msg = pct >= 90 ? "Absolutely nailed it!" : pct >= 75 ? "Strong session -- you know your stuff!" : pct >= 60 ? "Good work! Review the misses below and you'll own these next time." : pct >= 40 ? "Getting there -- focus on the domains below and come back stronger." : "Tough round, but now you know what to study. That's the whole point!";
               return <div style={{ fontSize:13, color: pct>=75?"#34d399":pct>=50?"#fbbf24":"#f87171", marginTop:10, fontWeight:500, maxWidth:400, margin:"10px auto 0", lineHeight:1.5 }}>{msg}</div>;
             })()}
@@ -1592,10 +1519,6 @@ function App() {
             );
           })()}
 
-          {mode === "baseline" && (
-            <BaselineReport results={sessionResults} domBreak={domBreak} correct={correct} total={total} pct={pct} guessedCount={guessedCount} knownCorrect={knownCorrect} knownTotal={knownTotal} realPct={realPct} />
-          )}
-
           <CopySessionResults results={sessionResults} mode={mode} domain={domainFilter} />
 
           <div style={{ display:"flex", gap:8 }}>
@@ -1680,7 +1603,7 @@ function App() {
                 return (
                   <div key={i} style={{ background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:"12px 16px", marginBottom:6 }}>
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                      <span style={{ color:"#666", fontSize:12 }}>{s.date} &middot; {s.mode === "baseline" ? "Baseline" : s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
+                      <span style={{ color:"#666", fontSize:12 }}>{s.date} &middot; {s.mode === "exam" ? "Exam" : s.domain ? DOMAIN_NAMES[s.domain] : "All domains"}</span>
                       <span style={{ color: Math.round((s.correct/Math.max(s.total,1))*100)>=75 ? "#34d399" : "#fbbf24", fontWeight:700, fontSize:12 }}>{s.correct}/{s.total}</span>
                     </div>
                     {s.results && (

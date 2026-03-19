@@ -9,31 +9,6 @@ How to use:
 5. After each session, paste results to keep tracking progress
 
 ==================================================
-BASELINE DIAGNOSTIC
-==================================================
-Date: 2026-03-10
-Overall: 14/20 (70%)
-Guessed: 6 | Real accuracy (no guesses): 12/14 (86%)
-
-  Domain 1 - Mobile Devices (15%):         3/4 (75%) -- STRONG [1 guessed]
-  Domain 2 - Networking (20%):             1/4 (25%) -- WEAK   [2 guessed]
-  Domain 3 - Hardware (25%):               4/4 (100%) -- STRONG [1 guessed]
-  Domain 4 - Virtualization & Cloud (11%): 3/4 (75%) -- STRONG [1 guessed]
-  Domain 5 - Troubleshooting (29%):        3/4 (75%) -- STRONG [1 guessed]
-
-  Missed:
-  - [Networking 2.5] Cable tester vs toner probe (picked toner probe) [GUESSED]
-  - [Virt/Cloud 4.1] SaaS vs IaaS -- didn't know the service models yet [GUESSED]
-  - [Networking 2.2] Router = Layer 3 -- picked Hub [GUESSED]
-  - [Mobile 1.4] CDMA vs GSM history -- picked GSM [GUESSED]
-  - [Troubleshooting 5.7] "Dest host unreachable" to gateway = physical layer, not firewall
-  - [Networking 2.1] DNS = port 53 -- picked 67 (that's DHCP)
-
-  Lucky guesses (got right but didn't truly know):
-  - [Hardware 3.1] DDR4 DIMM = 288 pins
-  - [Troubleshooting 5.2] Continuous short beeps = RAM problem
-
-==================================================
 STUDY SESSIONS
 ==================================================
 
@@ -144,10 +119,10 @@ No exam attempts yet.
 DOMAIN TRACKER (updated 2026-03-19)
 ==================================================
 Domain 1 - Mobile Devices (15%):            90%  STRONG      (learn Exchange ActiveSync; review display panels)
-Domain 2 - Networking (20%):               90%  STRONG      (drill SSH 22 vs RDP 3389; IPv4 ranges; DNS records)
+Domain 2 - Networking (20%):               85%  IMPROVING   (email port combos still shaky; MU-MIMO/OFDMA concepts weak)
 Domain 3 - Hardware (25%):                 80%  IMPROVING   (was 100% -- learn power connectors & 32-bit limit)
 Domain 4 - Virtualization & Cloud (11%):  100%  MASTERED
-Domain 5 - Troubleshooting (29%):         100%  STRONG      (learn BSOD codes: IRQL, KERNEL_DATA_INPAGE, PAGE_FAULT)
+Domain 5 - Troubleshooting (29%):          90%  STRONG      (BSOD codes: PAGE/FAULT/IRQL = RAM, KERNEL_DATA_INPAGE = storage)
 
 ==================================================
 STUDY PLAN (generated 2026-03-10)
@@ -184,23 +159,37 @@ Priority order based on baseline + exam weight:
      Recommended: 1 domain drill
 
 --------------------------------------------------
-Next milestone: Get Hardware back to 100% (power connectors + 32-bit limit) and Networking 90%+ with zero guesses
+Next milestone: Lock in email ports (993/995/465/587), BSOD→RAM association, and MU-MIMO/OFDMA concepts. Get Networking to 90%+
 --------------------------------------------------
 
 === SESSION LOG ===
 Date: 3/19/2026
 Mode: Study | All Domains
-Score: 22/25 (88%)
+Score: 8/10 (80%)
 Guessed: 0
 Weak areas identified:
-- Mobile Devices 1.1: AC adapter vs inverter board confusion — jumped too fast
-- Hardware 3.3: CPU socket generations — confused AM4 (Ryzen 1000-5000) with AM5 (Ryzen 7000+)
-- Virtualization & Cloud 4.2: VM snapshot vs backup distinction — thought snapshot was a backup of host OS
-- Networking 2.1: Port confidence still building — got IMAPS 993 but flagged low confidence
+- Networking 2.1: Email port combinations — picked IMAPS 993 + SMTP 587 (valid combo but not the listed answer POP3S 995 + SMTPS 465)
+- Troubleshooting 5.2: BSOD PAGE_FAULT — chose chkdsk instead of memtest; need to associate PAGE/FAULT/IRQL with RAM, not disk
+- Networking 2.3: MU-MIMO/OFDMA — got correct answers but flagged as guesses, doesn't understand what they do
 Recommendations:
-- Lock in: AC adapter = wall to laptop power, inverter = DC-to-AC for CCFL backlights only
-- Memorize socket map: AM4 = Ryzen 1000-5000, AM5 = Ryzen 7000+, LGA 1700 = Intel 12th-14th gen
-- Snapshot = temporary rollback point (save state), backup = full copy stored elsewhere
-- Add VNC 5900 to port knowledge alongside RDP 3389 and SSH 22
-- Continue port drilling — improving but still not automatic
-New questions written: 233-242
+- Rewatch Professor Messer: Common Network Ports (2.1), DNS Configuration (2.6), Wireless Network Standards (2.3), Troubleshooting Common Hardware (5.2)
+- Memorize BSOD rule: PAGE/FAULT/IRQL = RAM first, KERNEL_DATA_INPAGE = storage first
+- Lock in all four secure email ports: 993, 995, 465, 587
+New questions written: 243-250
+
+--- Session 8: 2026-03-19 ---
+Mode: Study | All Domains
+Score: 8/10 (80%)
+Guessed: 0 | Real accuracy: 8/10 (80%)
+
+Weak areas identified:
+- Networking 2.1: Email port combinations — picked IMAPS 993 + SMTP 587 (valid combo but not the listed answer POP3S 995 + SMTPS 465)
+- Troubleshooting 5.2: BSOD PAGE_FAULT — chose chkdsk instead of memtest; need to associate PAGE/FAULT/IRQL with RAM, not disk
+- Networking 2.3: MU-MIMO/OFDMA — got correct answers but flagged as guesses, doesn't understand what they do
+
+Recommendations:
+- Rewatch Professor Messer: Common Network Ports (2.1), DNS Configuration (2.6), Wireless Network Standards (2.3), Troubleshooting Common Hardware (5.2)
+- Memorize BSOD rule: PAGE/FAULT/IRQL = RAM first, KERNEL_DATA_INPAGE = storage first
+- Lock in all four secure email ports: 993, 995, 465, 587
+
+New questions written: 243-250
