@@ -36,7 +36,85 @@ Guessed: 6 | Real accuracy (no guesses): 12/14 (86%)
 ==================================================
 STUDY SESSIONS
 ==================================================
-No additional sessions yet. Baseline was first session.
+
+--- Session 1: 2026-03-16 ---
+Mode: Study | Domain: Networking
+Score: 8/10 (80%)
+Guessed: 3 | Real accuracy (no guesses): 7/7 (100%)
+
+Weak areas identified:
+- Networking 2.1: Email ports (POP3S 995, IMAPS 993, SMTPS 465, SMTP 587) — self-identified as weak
+- Networking 2.4: DNS record types (confused A vs AAAA, unfamiliar with record types overall)
+- Networking 2.3: Wi-Fi standard feature mapping (didn't know OFDMA/MU-MIMO = 802.11ax)
+
+Recommendations:
+- Drill port numbers next session — email ports, SSH/SFTP/FTP, RDP, and HTTP/HTTPS
+- Study DNS record types: A, AAAA, MX, CNAME, PTR, TXT, SOA, SRV, NS
+- Review Wi-Fi standards table: map each standard to frequency, max speed, and key features
+- Clarify T568A/T568B wiring standards vs RJ-45 connector type
+
+New questions written: 201-210
+
+--- Session 2: 2026-03-19 ---
+Mode: Study | Domain: Mobile Devices
+Score: 9/10 (90%)
+Guessed: 0 | Real accuracy: 9/10 (90%)
+
+Weak areas identified:
+- Mobile Devices 1.2: Display technologies — confused TN with OLED for best viewing angles/color
+
+Recommendations:
+- Review display panel tradeoffs: OLED (best color/contrast), IPS (best angles after OLED), TN (fastest response, worst angles)
+
+New questions written: 221-222
+
+--- Session 3: 2026-03-19 ---
+Mode: Study | Domain: Troubleshooting
+Score: 10/10 (100%)
+Guessed: 0 | Real accuracy: 10/10 (100%)
+
+Weak areas identified: None
+Recommendations: Domain is solid. No additional drilling needed at this time.
+New questions written: none
+
+--- Session 4: 2026-03-19 ---
+Mode: Study | Domain: Virtualization & Cloud
+Score: 10/10 (100%)
+Guessed: 0 | Real accuracy: 10/10 (100%)
+
+Weak areas identified: None
+Recommendations: Domain is solid. No additional drilling needed at this time.
+New questions written: none
+
+--- Session 5: 2026-03-19 ---
+Mode: Study | Domain: Hardware
+Score: 8/10 (80%)
+Guessed: 0 | Real accuracy: 8/10 (80%)
+
+Weak areas identified:
+- Hardware 3.4: Power connector identification — confused PCIe with EPS12V
+- Hardware 3.1: 32-bit addressing limits — didn't know 4 GB cap
+
+Recommendations:
+- Memorize the three power connectors: 24-pin ATX (board), 4/8-pin EPS12V (CPU), 6/8-pin PCIe (GPU)
+- Lock in 32-bit = 4 GB, know the "customer installed more RAM but only 3.5 GB shows" scenario
+
+New questions written: 211-214
+
+--- Session 6: 2026-03-19 ---
+Mode: Study | Domain: Networking
+Score: 9/10 (90%)
+Guessed: 1 | Real accuracy (no guesses): 8/9 (89%)
+
+Weak areas identified:
+- Networking 2.6: IPv4 special ranges — confused private 10.x.x.x with loopback 127.x.x.x
+- Networking 2.1: SNMP port 161/162 — guessed correctly but not confident
+
+Recommendations:
+- Drill IPv4 ranges: 127.0.0.0/8 (loopback), 169.254.x.x (APIPA), 10/172.16/192.168 (private)
+- Add SNMP 161/162 to port memorization drills
+
+New questions written: 215-220
 
 ==================================================
 EXAM ATTEMPTS
@@ -44,13 +122,13 @@ EXAM ATTEMPTS
 No exam attempts yet.
 
 ==================================================
-DOMAIN TRACKER (updated 2026-03-10)
+DOMAIN TRACKER (updated 2026-03-19)
 ==================================================
-Domain 1 - Mobile Devices (15%):            75%  STRONG      (review CDMA/GSM history)
-Domain 2 - Networking (20%):               25%  *** WEAK *** (priority #1)
-Domain 3 - Hardware (25%):                100%  STRONG      (but 1 lucky guess -- review DDR pin counts)
-Domain 4 - Virtualization & Cloud (11%):   75%  STRONG      (review IaaS vs PaaS vs SaaS)
-Domain 5 - Troubleshooting (29%):          75%  STRONG      (review error messages & physical layer clues)
+Domain 1 - Mobile Devices (15%):            90%  STRONG      (review display panel types: OLED vs IPS vs TN)
+Domain 2 - Networking (20%):               90%  STRONG      (was 80% -- drill IPv4 ranges & SNMP ports)
+Domain 3 - Hardware (25%):                 80%  IMPROVING   (was 100% -- learn power connectors & 32-bit limit)
+Domain 4 - Virtualization & Cloud (11%):  100%  MASTERED
+Domain 5 - Troubleshooting (29%):         100%  MASTERED
 
 ==================================================
 STUDY PLAN (generated 2026-03-10)
@@ -87,5 +165,5 @@ Priority order based on baseline + exam weight:
      Recommended: 1 domain drill
 
 --------------------------------------------------
-Next milestone: Get Networking to 75%+ on a domain drill
+Next milestone: Get Hardware back to 100% (power connectors + 32-bit limit) and Networking 90%+ with zero guesses
 --------------------------------------------------
