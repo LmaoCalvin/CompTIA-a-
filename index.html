@@ -991,6 +991,112 @@ function saveProgress(p) {
   }
 }
 
+/* ---- GitHub Gist Cloud Sync ---- */
+const GIST_FILENAME = "comptia-a-progress.json";
+const GIST_DESC = "CompTIA A+ Study Hub - Cloud Progress Sync";
+
+function getGistToken() {
+  try { return localStorage.getItem("comptia-gist-token") || ""; } catch(e) { return ""; }
+}
+function setGistToken(t) {
+  try { localStorage.setItem("comptia-gist-token", t); } catch(e) {}
+}
+function getGistId() {
+  try { return localStorage.getItem("comptia-gist-id") || ""; } catch(e) { return ""; }
+}
+function setGistId(id) {
+  try { localStorage.setItem("comptia-gist-id", id); } catch(e) {}
+}
+
+function mergeProgress(local, remote) {
+  /* Take the version with more total answers as the base, then merge in unique sessions */
+  if (!remote) return local;
+  if (!local) return remote;
+  var base = local.total >= remote.total ? JSON.parse(JSON.stringify(local)) : JSON.parse(JSON.stringify(remote));
+  var other = local.total >= remote.total ? remote : local;
+  /* Merge sessions: add any sessions from 'other' not already in 'base' by checking date+total+correct */
+  if (other.sessions && other.sessions.length > 0) {
+    if (!base.sessions) base.sessions = [];
+    var existing = new Set(base.sessions.map(function(s) { return s.date + "|" + s.total + "|" + s.correct; }));
+    other.sessions.forEach(function(s) {
+      var key = s.date + "|" + s.total + "|" + s.correct;
+      if (!existing.has(key)) base.sessions.push(s);
+    });
+  }
+  /* Merge exams similarly */
+  if (other.exams && other.exams.length > 0) {
+    if (!base.exams) base.exams = [];
+    var existingExams = new Set(base.exams.map(function(e) { return e.date + "|" + e.score; }));
+    other.exams.forEach(function(e) {
+      var key = e.date + "|" + e.score;
+      if (!existingExams.has(key)) base.exams.push(e);
+    });
+  }
+  /* Use highest totals per domain */
+  for (var i = 1; i <= 5; i++) {
+    if (other.ds[i] && base.ds[i]) {
+      if (other.ds[i].a > base.ds[i].a) {
+        base.ds[i] = JSON.parse(JSON.stringify(other.ds[i]));
+      }
+    }
+  }
+  /* Use highest overall totals */
+  if (other.total > base.total) { base.total = other.total; base.correct = other.correct; base.guessed = other.guessed || 0; }
+  return base;
+}
+
+async function gistPush(token, gistId, progress) {
+  var body = { description: GIST_DESC, files: {} };
+  body.files[GIST_FILENAME] = { content: JSON.stringify(progress, null, 2) };
+  if (gistId) {
+    var res = await fetch("https://api.github.com/gists/" + gistId, {
+      method: "PATCH", headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) return await res.json();
+    if (res.status === 404) { /* gist deleted, create new */ }
+    else throw new Error("Gist update failed: " + res.status);
+  }
+  /* Create new gist */
+  body.public = false;
+  var res2 = await fetch("https://api.github.com/gists", {
+    method: "POST", headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (!res2.ok) throw new Error("Gist create failed: " + res2.status);
+  var data = await res2.json();
+  setGistId(data.id);
+  return data;
+}
+
+async function gistPull(token, gistId) {
+  if (!gistId) return null;
+  var res = await fetch("https://api.github.com/gists/" + gistId, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+  if (res.status === 404) { setGistId(""); return null; }
+  if (!res.ok) throw new Error("Gist fetch failed: " + res.status);
+  var data = await res.json();
+  var file = data.files[GIST_FILENAME];
+  if (!file) return null;
+  return JSON.parse(file.content);
+}
+
+async function findExistingGist(token) {
+  var res = await fetch("https://api.github.com/gists?per_page=30", {
+    headers: { "Authorization": "Bearer " + token }
+  });
+  if (!res.ok) throw new Error("Failed to list gists: " + res.status);
+  var gists = await res.json();
+  for (var i = 0; i < gists.length; i++) {
+    if (gists[i].files[GIST_FILENAME]) {
+      setGistId(gists[i].id);
+      return gists[i].id;
+    }
+  }
+  return null;
+}
+
 function CopyProgress({ prog }) {
   const [copied, setCopied] = useState(false);
 
@@ -1168,9 +1274,69 @@ function App() {
   const tick = useRef(null);
   const sessionResultsRef = useRef([]);
 
+  /* Cloud sync state */
+  const [syncToken, setSyncToken] = useState(function() { return getGistToken(); });
+  const [syncStatus, setSyncStatus] = useState("idle"); /* idle | syncing | synced | error */
+  const [syncMsg, setSyncMsg] = useState("");
+  const [showSyncSetup, setShowSyncSetup] = useState(false);
+  const [tokenInput, setTokenInput] = useState("");
+
+  function doSync(localProg) {
+    if (!syncToken) return;
+    setSyncStatus("syncing"); setSyncMsg("Syncing...");
+    var gistId = getGistId();
+    (gistId ? Promise.resolve(gistId) : findExistingGist(syncToken))
+      .then(function(id) { return id ? gistPull(syncToken, id) : null; })
+      .then(function(remote) {
+        var merged = mergeProgress(localProg || prog, remote);
+        setProg(merged); saveProgress(merged);
+        return gistPush(syncToken, getGistId(), merged);
+      })
+      .then(function() { setSyncStatus("synced"); setSyncMsg("Synced just now"); })
+      .catch(function(e) { setSyncStatus("error"); setSyncMsg(e.message || "Sync failed"); });
+  }
+
+  function connectSync() {
+    var token = tokenInput.trim();
+    if (!token) return;
+    setSyncStatus("syncing"); setSyncMsg("Connecting...");
+    setGistToken(token); setSyncToken(token);
+    findExistingGist(token)
+      .then(function(id) { return id ? gistPull(token, id) : null; })
+      .then(function(remote) {
+        var local = loadProgress() || FRESH;
+        var merged = mergeProgress(local, remote);
+        setProg(merged); saveProgress(merged);
+        return gistPush(token, getGistId(), merged);
+      })
+      .then(function() {
+        setSyncStatus("synced"); setSyncMsg("Connected & synced!");
+        setShowSyncSetup(false); setTokenInput("");
+      })
+      .catch(function(e) {
+        setSyncStatus("error"); setSyncMsg("Failed: " + (e.message || "check your token"));
+        setGistToken(""); setSyncToken("");
+      });
+  }
+
+  function disconnectSync() {
+    setGistToken(""); setSyncToken(""); setSyncStatus("idle"); setSyncMsg(""); setShowSyncSetup(false);
+    try { localStorage.removeItem("comptia-gist-token"); localStorage.removeItem("comptia-gist-id"); } catch(e) {}
+  }
+
+  /* Auto-sync on load if token is set */
+  useEffect(function() {
+    if (syncToken) doSync(loadProgress() || FRESH);
+  }, []);
+
   const save = useCallback(function(p) {
     setProg(p);
     saveProgress(p);
+    /* Auto-push to cloud after each save */
+    var token = getGistToken();
+    if (token) {
+      gistPush(token, getGistId(), p).catch(function(e) { console.error("Cloud sync failed:", e); });
+    }
   }, []);
 
   useEffect(function() {
@@ -1359,6 +1525,66 @@ function App() {
             <button onClick={function() { setView("dashboard"); }} style={{ flex:1, padding:"12px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#888", fontSize:12, fontWeight:600, cursor:"pointer" }}>{"\u{1F4CA}"} Dashboard</button>
             {prog.total > 0 && (
               <button onClick={resetAll} style={{ padding:"12px 16px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#f87171", fontSize:12, fontWeight:600, cursor:"pointer" }}>Reset</button>
+            )}
+          </div>
+
+          {/* Cloud Sync Section */}
+          <div style={{ marginTop:24, borderTop:"1px solid #1a1a1a", paddingTop:16 }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:"#888" }}>{"\u2601\uFE0F"} Cloud Sync</div>
+              {syncToken && syncStatus === "synced" && (
+                <div style={{ fontSize:11, color:"#34d399" }}>{"\u2713"} {syncMsg}</div>
+              )}
+              {syncToken && syncStatus === "syncing" && (
+                <div style={{ fontSize:11, color:"#fbbf24" }}>{syncMsg}</div>
+              )}
+              {syncToken && syncStatus === "error" && (
+                <div style={{ fontSize:11, color:"#f87171" }}>{syncMsg}</div>
+              )}
+            </div>
+
+            {!syncToken ? (
+              <div>
+                {!showSyncSetup ? (
+                  <button onClick={function() { setShowSyncSetup(true); }} style={{ width:"100%", padding:"12px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#a78bfa", fontSize:12, fontWeight:600, cursor:"pointer" }}>
+                    Connect GitHub to sync across devices
+                  </button>
+                ) : (
+                  <div style={{ background:"#111", border:"1px solid #1a1a1a", borderRadius:8, padding:16 }}>
+                    <div style={{ fontSize:11, color:"#888", marginBottom:12, lineHeight:1.6 }}>
+                      1. Go to <span style={{ color:"#a78bfa" }}>github.com/settings/tokens</span><br/>
+                      2. Generate a token with only <span style={{ color:"#e5e5e5", fontWeight:600 }}>gist</span> scope<br/>
+                      3. Paste it below
+                    </div>
+                    <input
+                      type="password"
+                      placeholder="ghp_xxxxxxxxxxxx"
+                      value={tokenInput}
+                      onChange={function(e) { setTokenInput(e.target.value); }}
+                      onKeyDown={function(e) { if (e.key === "Enter") connectSync(); }}
+                      style={{ width:"100%", padding:"10px 12px", background:"#0c0c0c", border:"1px solid #333", borderRadius:6, color:"#e5e5e5", fontSize:13, fontFamily:"inherit", marginBottom:8, outline:"none" }}
+                    />
+                    <div style={{ display:"flex", gap:8 }}>
+                      <button onClick={connectSync} disabled={syncStatus === "syncing"} style={{ flex:1, padding:"10px", background: syncStatus === "syncing" ? "#1a1a1a" : "#a78bfa22", border:"1px solid #a78bfa44", borderRadius:6, color:"#a78bfa", fontSize:12, fontWeight:600, cursor: syncStatus === "syncing" ? "wait" : "pointer" }}>
+                        {syncStatus === "syncing" ? "Connecting..." : "Connect"}
+                      </button>
+                      <button onClick={function() { setShowSyncSetup(false); setTokenInput(""); }} style={{ padding:"10px 16px", background:"#111", border:"1px solid #1a1a1a", borderRadius:6, color:"#555", fontSize:12, cursor:"pointer" }}>
+                        Cancel
+                      </button>
+                    </div>
+                    {syncStatus === "error" && <div style={{ fontSize:11, color:"#f87171", marginTop:8 }}>{syncMsg}</div>}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={{ display:"flex", gap:8 }}>
+                <button onClick={function() { doSync(); }} disabled={syncStatus === "syncing"} style={{ flex:1, padding:"10px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color: syncStatus === "syncing" ? "#555" : "#a78bfa", fontSize:12, fontWeight:600, cursor: syncStatus === "syncing" ? "wait" : "pointer" }}>
+                  {syncStatus === "syncing" ? "Syncing..." : "Sync Now"}
+                </button>
+                <button onClick={disconnectSync} style={{ padding:"10px 16px", background:"#111", border:"1px solid #1a1a1a", borderRadius:8, color:"#555", fontSize:12, cursor:"pointer" }}>
+                  Disconnect
+                </button>
+              </div>
             )}
           </div>
         </div>
