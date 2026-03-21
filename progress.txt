@@ -193,3 +193,24 @@ Recommendations:
 - Lock in all four secure email ports: 993, 995, 465, 587
 
 New questions written: 243-250
+
+--- Session 9: 2026-03-20 ---
+Mode: Study | All Domains
+Score: 18/25 (72%)
+Guessed: 1 | Real accuracy (no guesses): 17/24 (71%)
+
+Weak areas identified:
+- Networking 2.5: OSI layers — thought router was Layer 1 (it's Layer 3)
+- Networking 2.6: Private IP ranges — confused Class B (172.16.x.x) with Class C (192.168.x.x) again
+- Mobile Devices 1.2: Wi-Fi Direct — didn't know it existed as a peer-to-peer file transfer option
+- Networking 2.1: Email ports — knows individual ports but struggles matching specific pairs to answer options
+- Troubleshooting 5.1: POST beep codes — guessed correctly on video card beep pattern
+
+Recommendations:
+- Memorize OSI layers 1-3 device mapping: Hub=L1, Switch=L2, Router=L3
+- Lock in private ranges by size: A=10 (biggest), B=172 (medium), C=192 (smallest/home)
+- Study all four secure email port combos so any pair can be matched
+- Note: lowest score of all sessions, likely fatigue — 3 misses were autopilot/wording, not knowledge gaps
+- Add OSI layer questions to quiz bank for drilling
+
+New questions written: 269-278
